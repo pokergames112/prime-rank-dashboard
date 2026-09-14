@@ -1,11 +1,25 @@
-# Ignorar todas as pastas de conversas e anexos (Privacidade & LGPD)
-*/
+# Ignorar pastas de conversas do WhatsApp e arquivos brutos (LGPD & Privacidade)
+* Comunicação 📣/
+Betânia Alves/
+Elisangela Fontes/
+Fábio Sales/
+HAROLDO AMARAL/
+Lúcia Barbosa/
+M G Recreacoes/
+Maria pasteisvirlenelavor/
+Paulo Pacífico/
+Roberta Nogueira/
+Stênio Andrade/
+Ângelo Ogá Produções/
+Dra. Aline Marques/
+
 *.txt
 *.pdf
-*.md
 
-# Permitir apenas o painel, documentação e gitignore
+# Manter painel, dados estruturados e documentação
 !index.html
 !painel_prime_rank.html
 !README.md
 !.gitignore
+!data/
+!data/clients.json
