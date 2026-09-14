@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prime Rank — Painel Executivo de Vendas & Tráfego</title>
+  <title>Prime Rank — Painel Comercial & Gestão de Clientes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -15,7 +15,7 @@
     :root {
       --bg-dark: #090d16;
       --bg-card: #0f172a;
-      --bg-card-glass: rgba(15, 23, 42, 0.75);
+      --bg-card-glass: rgba(15, 23, 42, 0.78);
       --border-card: rgba(255, 255, 255, 0.08);
       --border-card-hover: rgba(59, 130, 246, 0.4);
       --primary: #3b82f6;
@@ -164,7 +164,7 @@
       height: 18px;
     }
 
-    .input-wrapper input {
+    .input-wrapper input, .input-wrapper select {
       width: 100%;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border-card);
@@ -177,7 +177,7 @@
       transition: var(--transition);
     }
 
-    .input-wrapper input:focus {
+    .input-wrapper input:focus, .input-wrapper select:focus {
       border-color: var(--primary);
       background: rgba(255, 255, 255, 0.07);
       box-shadow: 0 0 15px var(--primary-glow);
@@ -226,7 +226,7 @@
       75% { transform: translateX(6px); }
     }
 
-    /* MAIN CONTAINER (HIDDEN UNTIL AUTH) */
+    /* MAIN CONTAINER */
     .container {
       width: 100%;
       max-width: 1440px;
@@ -289,7 +289,7 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .tag-badge {
@@ -329,6 +329,17 @@
     .btn-action:hover {
       background: rgba(255, 255, 255, 0.15);
       border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-primary-action {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: white;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-primary-action:hover {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
     }
 
     .btn-logout {
@@ -470,6 +481,8 @@
       margin-bottom: 24px;
       padding-bottom: 16px;
       border-bottom: 1px solid var(--border-card);
+      flex-wrap: wrap;
+      gap: 14px;
     }
 
     .section-title-wrap h2 {
@@ -596,6 +609,7 @@
       padding: 14px 16px;
       border-bottom: 1px solid var(--border-card);
       background: rgba(255, 255, 255, 0.02);
+      white-space: nowrap;
     }
 
     td {
@@ -646,6 +660,7 @@
       border-radius: 9999px;
       font-size: 11px;
       font-weight: 600;
+      white-space: nowrap;
     }
 
     .status-ativo {
@@ -675,6 +690,38 @@
     .mono-val {
       font-family: 'JetBrains Mono', monospace;
       font-weight: 700;
+    }
+
+    .table-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-card);
+      border-radius: 6px;
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-icon:hover {
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border-color: var(--primary);
+    }
+
+    .btn-icon.delete:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border-color: var(--danger);
     }
 
     /* Filter Controls */
@@ -845,6 +892,108 @@
       margin-top: 2px;
     }
 
+    /* MODAL DE CADASTRO / EDIÇÃO DE CLIENTE */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(12px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .modal-card {
+      background: #0f172a;
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 540px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-card);
+      padding-bottom: 14px;
+    }
+
+    .modal-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-close:hover {
+      color: white;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      border-top: 1px solid var(--border-card);
+      padding-top: 16px;
+      margin-top: 10px;
+    }
+
+    /* TOAST NOTIFICATION */
+    #toastNotice {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(16, 185, 129, 0.95);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      z-index: 10001;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
     @media print {
       body {
         background: white !important;
@@ -856,7 +1005,7 @@
         border: 1px solid #ddd !important;
         box-shadow: none !important;
       }
-      .btn-action, .nav-tabs, input[type="range"], #loginOverlay {
+      .btn-action, .nav-tabs, input[type="range"], #loginOverlay, .table-actions, .filter-group, #toastNotice, .modal-backdrop {
         display: none !important;
       }
       #mainDashboard {
@@ -908,7 +1057,7 @@
     </div>
   </div>
 
-  <!-- CONTAINER PRINCIPAL DO PAINEL (INICIALMENTE OCULTO ATÉ O LOGIN) -->
+  <!-- CONTAINER PRINCIPAL DO PAINEL -->
   <div class="container" id="mainDashboard" style="display: none;">
 
     <!-- HEADER -->
@@ -918,18 +1067,22 @@
           <i data-lucide="zap"></i>
         </div>
         <div class="brand-info">
-          <h1>PRIME RANK — PAINEL AUDITADO & COMERCIAL</h1>
-          <p>Dados Verificados: Faturamento Líquido, LTV, Copies e Planejamento</p>
+          <h1>PRIME RANK — PAINEL ESTRATÉGICO & CRM ATIVO</h1>
+          <p>Dados 100% Editáveis em Tempo Real com Recálculo Automático</p>
         </div>
       </div>
       <div class="header-actions">
-        <div class="tag-badge success">
-          <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
-          83 Leads & 10 Clientes Auditados
-        </div>
+        <button class="btn-action btn-primary-action" onclick="openClientModal()">
+          <i data-lucide="user-plus" style="width: 15px; height: 15px;"></i>
+          Novo Cliente
+        </button>
         <button class="btn-action" onclick="window.print()">
           <i data-lucide="printer" style="width: 15px; height: 15px;"></i>
           Imprimir
+        </button>
+        <button class="btn-action" onclick="resetToDefaultData()" title="Restaurar dados originais">
+          <i data-lucide="rotate-ccw" style="width: 15px; height: 15px;"></i>
+          Resetar
         </button>
         <button class="btn-action btn-logout" onclick="handleLogout()" title="Bloquear e Sair">
           <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
@@ -944,7 +1097,7 @@
         <i data-lucide="layout-dashboard" style="width: 16px; height: 16px;"></i> Visão Geral & Métricas
       </button>
       <button class="nav-tab" onclick="switchSection('tab-clientes')">
-        <i data-lucide="users" style="width: 16px; height: 16px;"></i> Clientes & Linha do Tempo (LTV)
+        <i data-lucide="users" style="width: 16px; height: 16px;"></i> Gestão de Clientes & LTV (Editável)
       </button>
       <button class="nav-tab" onclick="switchSection('tab-funil')">
         <i data-lucide="filter" style="width: 16px; height: 16px;"></i> Funil de Vendas (83 Leads)
@@ -960,7 +1113,7 @@
       </button>
     </nav>
 
-    <!-- KPI CARDS (AUDITADOS) -->
+    <!-- KPI CARDS (REATIVOS) -->
     <div class="kpi-grid">
       <div class="kpi-card">
         <div class="kpi-header">
@@ -969,8 +1122,8 @@
             <i data-lucide="dollar-sign" style="width: 18px; height: 18px;"></i>
           </div>
         </div>
-        <div class="kpi-value" style="color: #60a5fa;">R$ 13.300,00</div>
-        <div class="kpi-subtitle">Honorários totais recebidos</div>
+        <div class="kpi-value" id="kpiFaturamentoBruto" style="color: #60a5fa;">R$ 13.300,00</div>
+        <div class="kpi-subtitle">Honorários totais recebidos na conta</div>
       </div>
 
       <div class="kpi-card" style="border-color: rgba(16, 185, 129, 0.3);">
@@ -980,8 +1133,8 @@
             <i data-lucide="wallet" style="width: 18px; height: 18px;"></i>
           </div>
         </div>
-        <div class="kpi-value" style="color: #34d399;">R$ 8.914,78</div>
-        <div class="kpi-subtitle"><span class="kpi-trend trend-up">67,0% margem limpa</span> livre de aprendiz (R$ 3k) e ads (R$ 1.385)</div>
+        <div class="kpi-value" id="kpiLucroLiquido" style="color: #34d399;">R$ 8.914,78</div>
+        <div class="kpi-subtitle" id="kpiLucroMargemSub">67,0% livre após aprendiz e anúncios</div>
       </div>
 
       <div class="kpi-card">
@@ -991,19 +1144,19 @@
             <i data-lucide="users" style="width: 18px; height: 18px;"></i>
           </div>
         </div>
-        <div class="kpi-value" style="color: #fbbf24;">R$ 3.000,00</div>
-        <div class="kpi-subtitle">R$ 200/mês p/ cliente (Betânia, Eli, Lúcia, Fábio)</div>
+        <div class="kpi-value" id="kpiCustoAprendiz" style="color: #fbbf24;">R$ 3.000,00</div>
+        <div class="kpi-subtitle">R$ 200/mês por cliente de apoio</div>
       </div>
 
       <div class="kpi-card">
         <div class="kpi-header">
-          <span class="kpi-title">MRR Atual (Bruto / Líquido)</span>
+          <span class="kpi-title">MRR Atual (Recorrente)</span>
           <div class="kpi-icon-wrap" style="background: rgba(139, 92, 246, 0.12); color: #a78bfa;">
             <i data-lucide="zap" style="width: 18px; height: 18px;"></i>
           </div>
         </div>
-        <div class="kpi-value" style="color: #a78bfa;">R$ 1.400 / R$ 1.000</div>
-        <div class="kpi-subtitle">R$ 1.400 faturamento - R$ 400 aprendiz = <strong>R$ 1.000 líquido/mês</strong></div>
+        <div class="kpi-value" id="kpiMRR" style="color: #a78bfa;">R$ 1.400 / R$ 1.000</div>
+        <div class="kpi-subtitle" id="kpiMRRSub">R$ 1.400 bruto ➔ R$ 1.000 líquido/mês</div>
       </div>
 
       <div class="kpi-card">
@@ -1013,8 +1166,8 @@
             <i data-lucide="target" style="width: 18px; height: 18px;"></i>
           </div>
         </div>
-        <div class="kpi-value">R$ 9.800,00</div>
-        <div class="kpi-subtitle"><span class="kpi-trend trend-up">73,7%</span> do faturamento da agência</div>
+        <div class="kpi-value" id="kpiReceitaTrafego">R$ 9.800,00</div>
+        <div class="kpi-subtitle" id="kpiReceitaTrafegoSub">73,7% do faturamento da agência</div>
       </div>
 
       <div class="kpi-card">
@@ -1024,8 +1177,8 @@
             <i data-lucide="coins" style="width: 18px; height: 18px;"></i>
           </div>
         </div>
-        <div class="kpi-value" style="color: #60a5fa;">R$ 1.385,22</div>
-        <div class="kpi-subtitle">ROI Geral de <strong>7,07x</strong> sobre os anúncios</div>
+        <div class="kpi-value" id="kpiInvestimentoAds">R$ 1.385,22</div>
+        <div class="kpi-subtitle" id="kpiROASSub">ROAS Geral de <strong>7,07x</strong></div>
       </div>
     </div>
 
@@ -1068,10 +1221,11 @@
         <div class="grid-3">
           <div class="copy-card">
             <div class="copy-title" style="color: #34d399;">
-              <i data-lucide="trending-up" style="width: 18px; height: 18px;"></i> Tráfego Gera Clientes Mais Duradouros
+              <i data-lucide="trending-up" style="width: 18px; height: 18px;"></i> ROAS de 9,8x na Fase 1 e Nova Safra em Maturação
             </div>
             <p style="font-size: 13px; color: #cbd5e1;">
-              Enquanto quase todos os clientes de <strong>boca a boca duraram apenas 1 ou 2 meses</strong> (Arnóbio 1 mês, Fábio 1 mês, Paulo 2 meses, Stênio 2 meses), os clientes de <strong>tráfego pago geraram as maiores contas da agência</strong>: Elisângela (R$ 3.700) e Betânia (R$ 3.000). O tráfego gera clientes que confiam na metodologia e pagam todo mês.
+              Na <strong>Fase 1</strong>, a Prime Rank investiu <strong>R$ 1.000 em tráfego</strong> até fechar a Betânia e faturou <strong>R$ 9.800 (retorno de 9,8x)</strong>. 
+              Na <strong>Fase 2</strong> (iniciada em 21/08), investiu <strong>R$ 385,22</strong> gerando 30 leads a R$ 12,84 que estão na fase de qualificação/negociação no WhatsApp (pipeline ativo).
             </p>
           </div>
 
@@ -1086,30 +1240,37 @@
 
           <div class="copy-card">
             <div class="copy-title" style="color: #60a5fa;">
-              <i data-lucide="dollar-sign" style="width: 18px; height: 18px;"></i> Margem Limpa e Zero Custo Fixo
+              <i data-lucide="calculator" style="width: 18px; height: 18px;"></i> Estrutura Real de Custo: Aprendiz (R$ 200/cliente)
             </div>
             <p style="font-size: 13px; color: #cbd5e1;">
-              Como a Prime Rank <strong>não possui custos fixos pesados de ferramentas</strong> e os clientes pagam os anúncios diretamente à Meta, <strong>quase 100% dos R$ 12.950 faturados foram margem bruta</strong> para os sócios. O único custo real da agência é o seu próprio investimento em anúncios para atrair clientes.
+              O custo operacional direto da Prime Rank é o pagamento de <strong>R$ 200,00/mês por cliente ao aprendiz</strong> (aplicado em Betânia, Elisângela, Lúcia e Fábio = R$ 3.000 acumulados). 
+              Mesmo pagando essa equipe de apoio, a margem de lucro dos sócios é fantástica: <strong>R$ 8.914,78 líquidos (67% de margem)</strong> livre de aprendiz e ads!
             </p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ABA: CLIENTES & LTV -->
+    <!-- ABA: GESTÃO DE CLIENTES & LTV (100% DINÂMICA E EDITÁVEL) -->
     <div id="tab-clientes" class="tab-content" style="display: none;">
       <div class="section-card">
         <div class="section-header">
           <div class="section-title-wrap">
-            <h2><i data-lucide="users" style="width: 20px; height: 20px; color: #60a5fa;"></i> Carteira de Clientes Auditada</h2>
-            <p>Histórico verificado com data do primeiro pagamento, último pagamento e LTV real</p>
+            <h2><i data-lucide="users" style="width: 20px; height: 20px; color: #60a5fa;"></i> Gestão de Clientes & LTV (100% Editável)</h2>
+            <p>Adicione novos clientes, altere mensalidades, custos de aprendiz ou status com recálculo instantâneo</p>
           </div>
-          <div class="filter-group">
-            <button class="filter-btn active" onclick="filterClients('all')">Todos (10)</button>
-            <button class="filter-btn" onclick="filterClients('ativo')">Ativos Tráfego (2)</button>
-            <button class="filter-btn" onclick="filterClients('desativado')">Desativados Tráfego (3)</button>
-            <button class="filter-btn" onclick="filterClients('reuniao')">Reunião Não Fechada (2)</button>
-            <button class="filter-btn" onclick="filterClients('bocaboca')">Boca a Boca (5)</button>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <div class="filter-group">
+              <button class="filter-btn active" onclick="filterClients('all')">Todos</button>
+              <button class="filter-btn" onclick="filterClients('ativo')">Ativos</button>
+              <button class="filter-btn" onclick="filterClients('desativado')">Desativados</button>
+              <button class="filter-btn" onclick="filterClients('reuniao')">Reuniões</button>
+              <button class="filter-btn" onclick="filterClients('bocaboca')">Boca a Boca</button>
+            </div>
+            <button class="btn-action btn-primary-action" onclick="openClientModal()">
+              <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+              Adicionar Cliente
+            </button>
           </div>
         </div>
 
@@ -1119,242 +1280,17 @@
               <tr>
                 <th>Cliente / Nicho</th>
                 <th>Status / Origem</th>
-                <th>Período Exato (1º ao Último Pagamento)</th>
+                <th>Período Exato</th>
                 <th>Meses Pagos</th>
-                <th>Serviços Contratados</th>
-                <th>Mensalidade</th>
-                <th>Total Pago à Prime Rank</th>
+                <th>Mensalidade / Serviços</th>
+                <th>Custo Aprendiz</th>
+                <th>Lucro Líquido Sócios</th>
+                <th>Total Bruto Pago</th>
+                <th style="text-align: center;">Ações</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- Elisângela -->
-              <tr data-cat="ativo">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">EF</div>
-                    <div class="client-meta">
-                      <div class="client-name">Elisângela Fontes</div>
-                      <div class="client-sub">Moda & Varejo Feminino</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-ativo"><i data-lucide="radio" style="width: 10px; height: 10px;"></i> Ativo (Tráfego)</span></td>
-                <td>25/02/2026 ➔ 02/09/2026 (Paga todo dia 02)</td>
-                <td><span class="mono-val">7 meses</span></td>
-                <td>Logo (R$ 80) + Setup (R$ 620) + 6 mensalidades de R$ 500 (Tráfego e Redes)</td>
-                <td><span class="mono-val">R$ 500,00</span></td>
-                <td><span class="mono-val" style="color: #34d399;">R$ 3.700,00</span></td>
-              </tr>
-
-              <!-- Betânia -->
-              <tr data-cat="ativo">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">BA</div>
-                    <div class="client-meta">
-                      <div class="client-name">Betânia Alves</div>
-                      <div class="client-sub">Buffet Betânia & Eventos</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-ativo"><i data-lucide="radio" style="width: 10px; height: 10px;"></i> Ativo (Tráfego)</span></td>
-                <td>20/03/2026 ➔ 25/08/2026 (Paga dia 21/25)</td>
-                <td><span class="mono-val">6 meses</span></td>
-                <td>Tráfego Meta Ads Contínuo + Criação de Artes</td>
-                <td><span class="mono-val">R$ 500,00</span></td>
-                <td><span class="mono-val" style="color: #34d399;">R$ 3.000,00</span></td>
-              </tr>
-
-              <!-- Concept -->
-              <tr data-cat="desativado">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #64748b, #475569);">RN</div>
-                    <div class="client-meta">
-                      <div class="client-name">Roberta Nogueira (CONCEPT)</div>
-                      <div class="client-sub">Locação de Móveis & Flats</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-desativado">Desativado (Tráfego)</span></td>
-                <td>16/02/2026 ➔ 26/02/2026</td>
-                <td><span class="mono-val">1 mês + Site</span></td>
-                <td>Site Institucional (R$ 600) + 1º Mês de Tráfego (R$ 500)</td>
-                <td><span class="mono-val">R$ 500,00</span></td>
-                <td><span class="mono-val">R$ 1.100,00</span></td>
-              </tr>
-
-              <!-- Lúcia -->
-              <tr data-cat="desativado">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #64748b, #475569);">LB</div>
-                    <div class="client-meta">
-                      <div class="client-name">Lúcia Barbosa (Visual Lentes)</div>
-                      <div class="client-sub">Óptica & Lentes de Contato</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-desativado">Desativado (Tráfego)</span></td>
-                <td>04/03/2026 ➔ 02/04/2026</td>
-                <td><span class="mono-val">1 mês</span></td>
-                <td>Tráfego Meta Ads + Gestão de Redes Sociais</td>
-                <td><span class="mono-val">R$ 700,00</span></td>
-                <td><span class="mono-val">R$ 700,00</span></td>
-              </tr>
-
-              <!-- Virlene -->
-              <tr data-cat="desativado">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #64748b, #475569);">VL</div>
-                    <div class="client-meta">
-                      <div class="client-name">Maria Virlene (Pastéis Lavôr)</div>
-                      <div class="client-sub">Alimentação & Delivery</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-desativado">Desativado (Tráfego)</span></td>
-                <td>18/02/2026 ➔ 18/03/2026</td>
-                <td><span class="mono-val">1 mês</span></td>
-                <td>Tráfego Meta Local + Artes de Pastéis + Instagram</td>
-                <td><span class="mono-val">R$ 700,00</span></td>
-                <td><span class="mono-val">R$ 700,00</span></td>
-              </tr>
-
-              <!-- Haroldo -->
-              <tr data-cat="reuniao">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">HA</div>
-                    <div class="client-meta">
-                      <div class="client-name">Haroldo Amaral</div>
-                      <div class="client-sub">Consultoria / Planejamento</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-reuniao">Reunião sem fechar</span></td>
-                <td>26/01/2026 ➔ 28/01/2026</td>
-                <td><span class="mono-val">0 meses</span></td>
-                <td>Proposta enviada (R$ 450 mensal / R$ 380 trimestral)</td>
-                <td><span class="mono-val">—</span></td>
-                <td><span class="mono-val" style="color: #ef4444;">R$ 0,00</span></td>
-              </tr>
-
-              <!-- Ângelo Ogá -->
-              <tr data-cat="reuniao">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #f59e0b, #d97706);">AO</div>
-                    <div class="client-meta">
-                      <div class="client-name">Ângelo (Ogá Produções)</div>
-                      <div class="client-sub">Produtora de Eventos & Samba</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-reuniao">Reunião sem fechar</span></td>
-                <td>26/01/2026 ➔ 02/09/2026</td>
-                <td><span class="mono-val">0 meses</span></td>
-                <td>Proposta Comercial em PDF enviada aos sócios</td>
-                <td><span class="mono-val">—</span></td>
-                <td><span class="mono-val" style="color: #ef4444;">R$ 0,00</span></td>
-              </tr>
-
-              <!-- Dr. Paulo Pacífico -->
-              <tr data-cat="bocaboca">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">PP</div>
-                    <div class="client-meta">
-                      <div class="client-name">Dr. Paulo Pacífico</div>
-                      <div class="client-sub">Advocacia / Jurídico</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-bocaboca">Boca a Boca</span></td>
-                <td>02/02/2026 ➔ 10/03/2026 (ativo até 07/04)</td>
-                <td><span class="mono-val">2 meses</span></td>
-                <td>Tráfego Ativo Meta Ads para WhatsApp Jurídico</td>
-                <td><span class="mono-val">R$ 500,00</span></td>
-                <td><span class="mono-val">R$ 1.000,00</span></td>
-              </tr>
-
-              <!-- Stênio Andrade -->
-              <tr data-cat="bocaboca">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">SA</div>
-                    <div class="client-meta">
-                      <div class="client-name">Stênio Andrade (Salute)</div>
-                      <div class="client-sub">Cursos Livres / Acupuntura</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-bocaboca">Boca a Boca</span></td>
-                <td>25/02/2026 ➔ 25/04/2026</td>
-                <td><span class="mono-val">2 meses</span></td>
-                <td>Tráfego Meta Ads para Turmas de Acupuntura</td>
-                <td><span class="mono-val">R$ 500,00</span></td>
-                <td><span class="mono-val">R$ 1.000,00</span></td>
-              </tr>
-
-              <!-- Arnóbio -->
-              <tr data-cat="bocaboca">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">AG</div>
-                    <div class="client-meta">
-                      <div class="client-name">Arnóbio (MG Recreações)</div>
-                      <div class="client-sub">Recreação Infantil & Espuma</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-bocaboca">Boca a Boca</span></td>
-                <td>18/01/2026 ➔ 20/02/2026</td>
-                <td><span class="mono-val">1 mês</span></td>
-                <td>Tráfego Meta Ads + Campanhas de Carnaval</td>
-                <td><span class="mono-val">R$ 500,00</span></td>
-                <td><span class="mono-val">R$ 500,00</span></td>
-              </tr>
-
-              <!-- Fábio Sales -->
-              <tr data-cat="bocaboca">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">FS</div>
-                    <div class="client-meta">
-                      <div class="client-name">Fábio Sales (FS Imports)</div>
-                      <div class="client-sub">iPhones & Eletrônicos</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-bocaboca">Boca a Boca</span></td>
-                <td>14/04/2026 ➔ 14/05/2026</td>
-                <td><span class="mono-val">1 mês</span></td>
-                <td>Tráfego Meta Ads + Criativos para Stories/Feed</td>
-                <td><span class="mono-val">R$ 500,00</span></td>
-                <td><span class="mono-val">R$ 500,00</span></td>
-              </tr>
-
-              <!-- Dra. Aline -->
-              <tr data-cat="bocaboca">
-                <td>
-                  <div class="client-cell">
-                    <div class="client-avatar" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">AM</div>
-                    <div class="client-meta">
-                      <div class="client-name">Dra. Aline Marques</div>
-                      <div class="client-sub">Clínica Estética Avançada</div>
-                    </div>
-                  </div>
-                </td>
-                <td><span class="status-pill status-bocaboca">Boca a Boca</span></td>
-                <td>14/11/2025 ➔ 21/08/2026</td>
-                <td><span class="mono-val">Pontual</span></td>
-                <td>Criação de Site (R$ 500) + Ajustes (R$ 50) + Blog (R$ 200)</td>
-                <td><span class="mono-val">R$ 200,00 (Blog)</span></td>
-                <td><span class="mono-val">R$ 750,00</span></td>
-              </tr>
-
+            <tbody id="clientsTableBody">
+              <!-- Renderizado dinamicamente via JS -->
             </tbody>
           </table>
         </div>
@@ -1535,7 +1471,7 @@
             <div class="copy-card">
               <div class="copy-header">
                 <span class="copy-title"><i data-lucide="layers" style="width: 16px; height: 16px; color: #a78bfa;"></i> 3. Técnica "Pé na Porta" (Micro-pagamento)</span>
-                <span class="tag-badge success">Fechou Elisângela (R$ 3.700 LTV)</span>
+                <span class="tag-badge success">Fechou Elisângela (R$ 4.900 LTV)</span>
               </div>
               <div class="copy-box">
                 "Como a senhora já fez R$ 80 na criação da logo, por mais R$ 620 seria o valor que restaria para darmos continuidade no tráfego e redes..."
@@ -1698,10 +1634,10 @@
 
             <div class="form-group">
               <div class="form-label">
-                <span>Custo Fixo de Ferramentas Rateado por Cliente:</span>
+                <span>Custo Fixo de Ferramentas / Aprendiz Rateado:</span>
                 <span class="highlight" id="lblCustoFixo">R$ 200,00 (Aprendiz)</span>
               </div>
-              <input type="range" id="inputCustoFixo" min="0" max="300" step="10" value="200" oninput="calcPricing()" />
+              <input type="range" id="inputCustoFixo" min="0" max="400" step="10" value="200" oninput="calcPricing()" />
             </div>
 
             <div class="form-group">
@@ -1715,11 +1651,11 @@
             <div class="sim-results-grid">
               <div class="sim-result-item">
                 <div class="sim-result-title">Custo Operacional Total</div>
-                <div class="sim-result-val" id="resCustoTotal" style="color: #f87171;">R$ 430,00</div>
+                <div class="sim-result-val" id="resCustoTotal" style="color: #f87171;">R$ 600,00</div>
               </div>
               <div class="sim-result-item" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3);">
                 <div class="sim-result-title" style="color: #34d399;">Preço de Venda Recomendado</div>
-                <div class="sim-result-val" id="resPrecoVenda" style="color: #34d399;">R$ 716,67</div>
+                <div class="sim-result-val" id="resPrecoVenda" style="color: #34d399;">R$ 1.000,00</div>
               </div>
             </div>
           </div>
@@ -1728,7 +1664,7 @@
             <i data-lucide="check-circle-2"></i>
             <div>
               <strong>Fórmula Prática para o Sócio:</strong><br>
-              <code>Preço Final = (Horas × Valor da Hora + Custo Ferramentas) ÷ (1 - Margem de Lucro)</code><br>
+              <code>Preço Final = (Horas × Valor da Hora + Custo Aprendiz/Ferramentas) ÷ (1 - Margem de Lucro)</code><br>
               Com isso, vocês sabem exatamente quanto sobra para o caixa da agência e evitam precificar no "chute".
             </div>
           </div>
@@ -1739,58 +1675,48 @@
     <!-- ABA: PLANEJAMENTO DE TRÁFEGO & ROI -->
     <div id="tab-planejamento" class="tab-content" style="display: none;">
       <div class="grid-2">
-        <!-- Análise do Print da Campanha -->
+        <!-- Análise do Histórico de Tráfego: Fase 1 vs Fase 2 -->
         <div class="section-card">
           <div class="section-header">
             <div class="section-title-wrap">
-              <h2><i data-lucide="camera" style="width: 20px; height: 20px; color: #60a5fa;"></i> Dados Reais do Print da Campanha</h2>
-              <p>Campanha "Prime Rank Vendas - 21/08/2026" (Meta Ads)</p>
+              <h2><i data-lucide="target" style="width: 20px; height: 20px; color: #60a5fa;"></i> Histórico de Tráfego da Prime Rank: Fase 1 vs Fase 2</h2>
+              <p>Auditoria de investimento em anúncios próprios e retorno para a agência</p>
             </div>
           </div>
 
-          <div class="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th>Métrica do Print</th>
-                  <th>Valor Registrado</th>
-                  <th>Avaliação Executiva</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Orçamento Diário</strong></td>
-                  <td><span class="mono-val">R$ 16,00 / dia</span></td>
-                  <td>Orçamento atual (~R$ 480/mês)</td>
-                </tr>
-                <tr>
-                  <td><strong>Valor Total Gasto</strong></td>
-                  <td><span class="mono-val" style="color: #fbbf24;">R$ 385,22</span></td>
-                  <td>Gasto em ~24 dias de veiculação</td>
-                </tr>
-                <tr>
-                  <td><strong>Conversas Iniciadas (WhatsApp)</strong></td>
-                  <td><span class="mono-val" style="color: #60a5fa;">30 mensagens</span></td>
-                  <td>Contatos diretos de empresários</td>
-                </tr>
-                <tr>
-                  <td><strong>Custo por Resultado (CPL)</strong></td>
-                  <td><span class="mono-val" style="color: #34d399;">R$ 12,84 / lead</span></td>
-                  <td><span class="tag-badge success">Excelente</span> Custo muito abaixo do benchmark B2B (R$ 20-30)</td>
-                </tr>
-                <tr>
-                  <td><strong>Impressões / Alcance</strong></td>
-                  <td><span class="mono-val">6.305 / 3.596</span></td>
-                  <td>Frequência saudável de 1,75 por usuário</td>
-                </tr>
-              </tbody>
-            </table>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <!-- Fase 1 Card -->
+            <div class="copy-card" style="border-left: 3px solid #10b981;">
+              <div class="copy-header">
+                <span class="copy-title" style="color: #34d399;"><i data-lucide="check-circle" style="width: 16px; height: 16px;"></i> Fase 1: Validação Inicial (Até consolidar Betânia)</span>
+                <span class="tag-badge success">ROI: 9,8x</span>
+              </div>
+              <p style="font-size: 13px; color: #cbd5e1;">
+                • <strong>Investimento em Ads:</strong> R$ 1.000,00 acumulados.<br>
+                • <strong>Resultados Fechados:</strong> Trouxe Elisângela, Betânia, Concept, Visual e Virlene.<br>
+                • <strong>Faturamento Gerado:</strong> <strong style="color: #34d399;">R$ 9.800,00</strong> (Retorno de R$ 9,80 para cada R$ 1 investido).
+              </p>
+            </div>
+
+            <!-- Fase 2 Card -->
+            <div class="copy-card" style="border-left: 3px solid #3b82f6;">
+              <div class="copy-header">
+                <span class="copy-title" style="color: #60a5fa;"><i data-lucide="flame" style="width: 16px; height: 16px;"></i> Fase 2: Retomada Ativa (Print de 21/08/2026 até Hoje)</span>
+                <span class="tag-badge" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa;">Em Maturação</span>
+              </div>
+              <p style="font-size: 13px; color: #cbd5e1;">
+                • <strong>Investimento até agora:</strong> R$ 385,22 (R$ 16,00/dia).<br>
+                • <strong>Leads no WhatsApp:</strong> 30 conversas iniciadas com custo por lead de <strong>R$ 12,84</strong>.<br>
+                • <strong>Status Atual:</strong> 0 fechamentos consolidados ainda (normal para o ciclo de vendas B2B de 15 a 30 dias; leads em atendimento/proposta).<br>
+                • <strong>Expectativa Estatística:</strong> Com a taxa de 6% da agência, essa safra de 30 leads deve converter <strong>1 a 2 novos clientes</strong> nas próximas semanas!
+              </p>
+            </div>
           </div>
 
           <div class="callout" style="margin-top: 20px;">
             <i data-lucide="trending-up"></i>
             <div>
-              <strong>Cálculo do CAC:</strong> Com <strong>R$ 12,84 por lead</strong> e taxa de fechamento de <strong>6,02%</strong> (1 a cada 17 leads), o CAC da Prime Rank é de apenas <strong>R$ 213,28</strong> por cliente fechado. Como cada cliente de tráfego tem um LTV médio de R$ 1.960,00, a agência tem um retorno de <strong>8,6x sobre cada real investido no próprio tráfego</strong>!
+              <strong>Consolidado Geral de Ads:</strong> Total investido de <strong>R$ 1.385,22</strong> para um faturamento de <strong>R$ 9.800,00</strong> ➔ <strong>ROAS Global de 7,07x</strong>. A Prime Rank tem um modelo altamente lucrativo e testado na prática.
             </div>
           </div>
         </div>
@@ -1869,15 +1795,343 @@
 
   </div>
 
+  <!-- MODAL DE CADASTRO / EDIÇÃO DE CLIENTE -->
+  <div class="modal-backdrop" id="clientModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle"><i data-lucide="user-plus" style="width: 20px; height: 20px; color: #60a5fa;"></i> Novo Cliente</h3>
+        <button class="modal-close" onclick="closeClientModal()">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <form id="clientForm" onsubmit="saveClient(event)">
+        <input type="hidden" id="clientId" />
+
+        <div class="modal-grid">
+          <div class="input-field">
+            <label>Nome do Cliente *</label>
+            <div class="input-wrapper">
+              <input type="text" id="mNome" placeholder="Ex: Novo Cliente" required />
+            </div>
+          </div>
+
+          <div class="input-field">
+            <label>Nicho / Segmento</label>
+            <div class="input-wrapper">
+              <input type="text" id="mNicho" placeholder="Ex: Varejo / Clínica" />
+            </div>
+          </div>
+
+          <div class="input-field">
+            <label>Origem do Cliente *</label>
+            <div class="input-wrapper">
+              <select id="mOrigem" required>
+                <option value="trafego">Tráfego Pago (Meta Ads)</option>
+                <option value="bocaboca">Boca a Boca / Indicação</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <label>Status Atual *</label>
+            <div class="input-wrapper">
+              <select id="mStatus" required>
+                <option value="ativo">Ativo (Pagando)</option>
+                <option value="desativado">Desativado</option>
+                <option value="reuniao">Reunião sem fechar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-field">
+            <label>Mensalidade (R$) *</label>
+            <div class="input-wrapper">
+              <input type="number" id="mMensalidade" step="50" min="0" placeholder="Ex: 700" required />
+            </div>
+          </div>
+
+          <div class="input-field">
+            <label>Meses Pagos *</label>
+            <div class="input-wrapper">
+              <input type="number" id="mMesesPagos" min="0" step="1" placeholder="Ex: 1" required />
+            </div>
+          </div>
+
+          <div class="input-field">
+            <label>Custo Aprendiz / Mês (R$)</label>
+            <div class="input-wrapper">
+              <input type="number" id="mCustoAprendiz" step="50" min="0" placeholder="Ex: 200" value="0" />
+            </div>
+          </div>
+
+          <div class="input-field">
+            <label>Setup / Extras Pagos (R$)</label>
+            <div class="input-wrapper">
+              <input type="number" id="mSetupExtra" step="10" min="0" placeholder="Ex: 80 (Logo)" value="0" />
+            </div>
+          </div>
+        </div>
+
+        <div class="input-field" style="margin-top: 12px;">
+          <label>Período / Datas</label>
+          <div class="input-wrapper">
+            <input type="text" id="mPeriodo" placeholder="Ex: 15/09/26 ➔ Ativo" />
+          </div>
+        </div>
+
+        <div class="input-field" style="margin-top: 12px;">
+          <label>Serviços / Observações</label>
+          <div class="input-wrapper">
+            <input type="text" id="mServicos" placeholder="Ex: Tráfego Meta + Redes Sociais" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-action" onclick="closeClientModal()">Cancelar</button>
+          <button type="submit" class="btn-action btn-primary-action">
+            <i data-lucide="check" style="width: 15px; height: 15px;"></i>
+            Salvar e Recalcular
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastNotice">
+    <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
+    <span id="toastMsg">Painel recalculado com sucesso!</span>
+  </div>
+
   <script>
-    // SHA-256 Hashes para Autenticação Segura
-    // Usuários permitidos: "primerank" ou "admin"
-    // Senha padrão configurada: "primerank2026"
+    // SHA-256 Authentication
     const AUTH_CONFIG = {
       allowedUsers: ["primerank", "admin"],
       passwordHash: "238227015494f5ecc1ce43e6871050bb9d8200fd375f4a8274a3751095b30dfc"
     };
 
+    // Total investido em Ads (Fase 1 + Fase 2)
+    const TOTAL_AD_SPEND = 1385.22;
+
+    // DADOS PADRÃO AUDITADOS
+    const DEFAULT_CLIENTS = [
+      {
+        id: "c1",
+        nome: "Elisângela Fontes",
+        nicho: "Moda & Varejo Feminino",
+        origem: "trafego",
+        status: "ativo",
+        periodo: "25/02/26 ➔ 02/09/26",
+        mesesPagos: 7,
+        mensalidade: 700,
+        custoAprendizMensal: 200,
+        setupExtra: 0,
+        servicos: "Setup Inicial Completo: Tráfego Ativo + Gestão Redes Sociais + Logo",
+        avatar: "EF",
+        avatarGrad: "linear-gradient(135deg, #10b981, #059669)"
+      },
+      {
+        id: "c2",
+        nome: "Betânia Alves",
+        nicho: "Buffet Betânia & Eventos",
+        origem: "trafego",
+        status: "ativo",
+        periodo: "20/03/26 ➔ Ativa",
+        mesesPagos: 6,
+        mensalidade: 700, // Novo plano R$ 700
+        mensalidadeAnterior: 500, // 6 meses pagos a 500 = 3000
+        custoAprendizMensal: 200,
+        setupExtra: 0,
+        overrideTotalBruto: 3000,
+        servicos: "Combo Fechado: Tráfego Meta + Gestão de Redes Sociais (Upsell R$ 700)",
+        avatar: "BA",
+        avatarGrad: "linear-gradient(135deg, #3b82f6, #1d4ed8)",
+        tagBadge: "🚀 Upsell R$ 700 em 25/09"
+      },
+      {
+        id: "c3",
+        nome: "Roberta Nogueira (CONCEPT)",
+        nicho: "Locação de Móveis & Flats",
+        origem: "trafego",
+        status: "desativado",
+        periodo: "16/02/26 ➔ 26/02/26",
+        mesesPagos: 1,
+        mensalidade: 500,
+        custoAprendizMensal: 0,
+        setupExtra: 0,
+        servicos: "1º Mês de Tráfego e Artes (Pago) | Site entregue sem pagamento",
+        avatar: "RN",
+        avatarGrad: "linear-gradient(135deg, #64748b, #475569)",
+        tagBadge: "⚠️ Site Não Pago (R$ 600)"
+      },
+      {
+        id: "c4",
+        nome: "Lúcia Barbosa (Visual Lentes)",
+        nicho: "Óptica & Lentes de Contato",
+        origem: "trafego",
+        status: "desativado",
+        periodo: "04/03/26 ➔ 02/04/26",
+        mesesPagos: 1,
+        mensalidade: 700,
+        custoAprendizMensal: 200,
+        setupExtra: 0,
+        servicos: "Tráfego Meta Ads + Gestão de Redes Sociais",
+        avatar: "LB",
+        avatarGrad: "linear-gradient(135deg, #64748b, #475569)"
+      },
+      {
+        id: "c5",
+        nome: "Maria Virlene (Pastéis Lavôr)",
+        nicho: "Alimentação & Delivery",
+        origem: "trafego",
+        status: "desativado",
+        periodo: "18/02/26 ➔ 18/03/26",
+        mesesPagos: 1,
+        mensalidade: 700,
+        custoAprendizMensal: 0,
+        setupExtra: 0,
+        servicos: "Tráfego Meta Local + Artes de Pastéis + Instagram",
+        avatar: "VL",
+        avatarGrad: "linear-gradient(135deg, #64748b, #475569)"
+      },
+      {
+        id: "c6",
+        nome: "Haroldo Amaral",
+        nicho: "Consultoria / Planejamento",
+        origem: "trafego",
+        status: "reuniao",
+        periodo: "26/01/26 ➔ 28/01/26",
+        mesesPagos: 0,
+        mensalidade: 450,
+        custoAprendizMensal: 0,
+        setupExtra: 0,
+        servicos: "Proposta enviada (R$ 450 mensal)",
+        avatar: "HA",
+        avatarGrad: "linear-gradient(135deg, #f59e0b, #d97706)"
+      },
+      {
+        id: "c7",
+        nome: "Ângelo (Ogá Produções)",
+        nicho: "Produtora de Eventos & Samba",
+        origem: "trafego",
+        status: "reuniao",
+        periodo: "26/01/26 ➔ 02/09/26",
+        mesesPagos: 0,
+        mensalidade: 500,
+        custoAprendizMensal: 0,
+        setupExtra: 0,
+        servicos: "Proposta Comercial em PDF enviada aos sócios",
+        avatar: "AO",
+        avatarGrad: "linear-gradient(135deg, #f59e0b, #d97706)"
+      },
+      {
+        id: "c8",
+        nome: "Dr. Paulo Pacífico",
+        nicho: "Advocacia / Jurídico",
+        origem: "bocaboca",
+        status: "bocaboca",
+        periodo: "02/02/26 ➔ 10/03/26",
+        mesesPagos: 2,
+        mensalidade: 500,
+        custoAprendizMensal: 0,
+        setupExtra: 0,
+        servicos: "Tráfego Ativo Meta Ads para WhatsApp Jurídico",
+        avatar: "PP",
+        avatarGrad: "linear-gradient(135deg, #8b5cf6, #7c3aed)"
+      },
+      {
+        id: "c9",
+        nome: "Stênio Andrade (Salute)",
+        nicho: "Cursos Livres / Acupuntura",
+        origem: "bocaboca",
+        status: "bocaboca",
+        periodo: "25/02/26 ➔ 25/04/26",
+        mesesPagos: 2,
+        mensalidade: 500,
+        custoAprendizMensal: 0,
+        setupExtra: 0,
+        servicos: "Tráfego Meta Ads para Turmas de Acupuntura",
+        avatar: "SA",
+        avatarGrad: "linear-gradient(135deg, #8b5cf6, #7c3aed)"
+      },
+      {
+        id: "c10",
+        nome: "Arnóbio (MG Recreações)",
+        nicho: "Recreação Infantil & Espuma",
+        origem: "bocaboca",
+        status: "bocaboca",
+        periodo: "18/01/26 ➔ 20/02/26",
+        mesesPagos: 1,
+        mensalidade: 500,
+        custoAprendizMensal: 0,
+        setupExtra: 0,
+        servicos: "Tráfego Meta Ads + Campanhas de Carnaval",
+        avatar: "AG",
+        avatarGrad: "linear-gradient(135deg, #8b5cf6, #7c3aed)"
+      },
+      {
+        id: "c11",
+        nome: "Fábio Sales (FS Imports)",
+        nicho: "iPhones & Eletrônicos",
+        origem: "bocaboca",
+        status: "bocaboca",
+        periodo: "14/04/26 ➔ 14/05/26",
+        mesesPagos: 1,
+        mensalidade: 500,
+        custoAprendizMensal: 200,
+        setupExtra: 0,
+        servicos: "Tráfego Meta Ads + Criativos para Stories/Feed",
+        avatar: "FS",
+        avatarGrad: "linear-gradient(135deg, #8b5cf6, #7c3aed)"
+      },
+      {
+        id: "c12",
+        nome: "Dra. Aline Marques",
+        nicho: "Clínica Estética Avançada",
+        origem: "bocaboca",
+        status: "bocaboca",
+        periodo: "14/11/25 (Site)",
+        mesesPagos: 0,
+        mensalidade: 0,
+        custoAprendizMensal: 0,
+        setupExtra: 500,
+        servicos: "Criação de Landing Page / Site Institucional",
+        avatar: "AM",
+        avatarGrad: "linear-gradient(135deg, #8b5cf6, #7c3aed)",
+        tagBadge: "💬 Em Negociação"
+      }
+    ];
+
+    // Carrega dados do LocalStorage ou padrão
+    let clientsData = [];
+    function loadClients() {
+      const saved = localStorage.getItem('pr_crm_clients_v1');
+      if (saved) {
+        try {
+          clientsData = JSON.parse(saved);
+        } catch(e) {
+          clientsData = [...DEFAULT_CLIENTS];
+        }
+      } else {
+        clientsData = [...DEFAULT_CLIENTS];
+      }
+    }
+
+    function saveToStorage() {
+      localStorage.setItem('pr_crm_clients_v1', JSON.stringify(clientsData));
+    }
+
+    function resetToDefaultData() {
+      if (confirm("Deseja restaurar a carteira de clientes para os dados auditados originais?")) {
+        clientsData = JSON.parse(JSON.stringify(DEFAULT_CLIENTS));
+        saveToStorage();
+        recalculateAndRender();
+        showToast("Dados restaurados para o padrão auditado!");
+      }
+    }
+
+    // AUTH FUNCTIONS
     async function sha256(message) {
       const msgBuffer = new TextEncoder().encode(message);
       const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -1909,6 +2163,8 @@
       setTimeout(() => {
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('mainDashboard').style.display = 'flex';
+        loadClients();
+        recalculateAndRender();
         initCharts();
         lucide.createIcons();
       }, 400);
@@ -1919,47 +2175,278 @@
       window.location.reload();
     }
 
-    // Checar sessão ao carregar a página
-    window.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-      if (sessionStorage.getItem('pr_auth_token')) {
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('mainDashboard').style.display = 'flex';
-        initCharts();
-      }
-    });
+    // ENGINE DE RECÁLCULO E RENDERIZAÇÃO REATIVA
+    let currentFilter = 'all';
 
-    function switchSection(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
-      
-      document.getElementById(tabId).style.display = 'block';
-      event.currentTarget.classList.add('active');
-      lucide.createIcons();
-    }
+    function recalculateAndRender() {
+      let faturamentoBruto = 0;
+      let totalCustoAprendiz = 0;
+      let mrrBruto = 0;
+      let mrrCustoAprendiz = 0;
+      let receitaTrafego = 0;
+      let receitaBocaBoca = 0;
+      let clientesTrafegoPagantes = 0;
 
-    function filterClients(cat) {
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-
-      const rows = document.querySelectorAll('#clientsTable tbody tr');
-      rows.forEach(row => {
-        if (cat === 'all' || row.getAttribute('data-cat') === cat) {
-          row.style.display = '';
+      clientsData.forEach(c => {
+        // Cálculo do valor total do cliente
+        let totalCliente = 0;
+        if (c.overrideTotalBruto !== undefined) {
+          totalCliente = c.overrideTotalBruto;
         } else {
-          row.style.display = 'none';
+          totalCliente = (Number(c.mensalidade) * Number(c.mesesPagos)) + Number(c.setupExtra || 0);
+        }
+        c.calculatedTotal = totalCliente;
+
+        const custoAprendizCliente = Number(c.custoAprendizMensal || 0) * Number(c.mesesPagos);
+        c.calculatedCustoAprendiz = custoAprendizCliente;
+        c.calculatedLucro = totalCliente - custoAprendizCliente;
+
+        faturamentoBruto += totalCliente;
+        totalCustoAprendiz += custoAprendizCliente;
+
+        // Origem
+        if (c.origem === 'trafego') {
+          receitaTrafego += totalCliente;
+          if (totalCliente > 0) clientesTrafegoPagantes++;
+        } else {
+          receitaBocaBoca += totalCliente;
+        }
+
+        // MRR de Ativos
+        if (c.status === 'ativo') {
+          mrrBruto += Number(c.mensalidade);
+          mrrCustoAprendiz += Number(c.custoAprendizMensal || 0);
         }
       });
+
+      // Lucro Líquido Real dos Sócios
+      const lucroLiquidoReal = faturamentoBruto - totalCustoAprendiz - TOTAL_AD_SPEND;
+      const margemLiquida = faturamentoBruto > 0 ? (lucroLiquidoReal / faturamentoBruto) * 100 : 0;
+      const mrrLiquido = mrrBruto - mrrCustoAprendiz;
+      const pctTrafego = faturamentoBruto > 0 ? (receitaTrafego / faturamentoBruto) * 100 : 0;
+      const roasGeral = TOTAL_AD_SPEND > 0 ? (receitaTrafego / TOTAL_AD_SPEND) : 0;
+
+      // Atualiza os Cards Superiores
+      document.getElementById('kpiFaturamentoBruto').innerText = 'R$ ' + faturamentoBruto.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+      document.getElementById('kpiLucroLiquido').innerText = 'R$ ' + lucroLiquidoReal.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+      document.getElementById('kpiLucroMargemSub').innerText = margemLiquida.toFixed(1) + '% margem limpa livre de aprendiz e ads';
+      document.getElementById('kpiCustoAprendiz').innerText = 'R$ ' + totalCustoAprendiz.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+      document.getElementById('kpiMRR').innerText = 'R$ ' + mrrBruto.toLocaleString('pt-BR') + ' / R$ ' + mrrLiquido.toLocaleString('pt-BR');
+      document.getElementById('kpiMRRSub').innerText = 'R$ ' + mrrBruto.toLocaleString('pt-BR') + ' bruto ➔ R$ ' + mrrLiquido.toLocaleString('pt-BR') + ' líquido/mês';
+      document.getElementById('kpiReceitaTrafego').innerText = 'R$ ' + receitaTrafego.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+      document.getElementById('kpiReceitaTrafegoSub').innerText = pctTrafego.toFixed(1) + '% do faturamento da agência';
+      document.getElementById('kpiROASSub').innerHTML = 'ROAS Geral de <strong>' + roasGeral.toFixed(2) + 'x</strong>';
+
+      // Renderiza a Tabela
+      renderTable();
+
+      // Atualiza os Gráficos
+      updateCharts(receitaTrafego, receitaBocaBoca);
     }
 
-    // Inicialização dos Gráficos apenas após desbloqueio
-    let chartsInitialized = false;
-    function initCharts() {
-      if (chartsInitialized) return;
-      chartsInitialized = true;
+    function renderTable() {
+      const tbody = document.getElementById('clientsTableBody');
+      tbody.innerHTML = '';
 
+      clientsData.forEach(c => {
+        // Checa filtro
+        if (currentFilter !== 'all') {
+          if (currentFilter === 'bocaboca' && c.origem !== 'bocaboca') return;
+          if (currentFilter !== 'bocaboca' && c.status !== currentFilter) return;
+        }
+
+        const tr = document.createElement('tr');
+        tr.setAttribute('data-cat', c.status);
+
+        // Status Badge
+        let statusBadge = '';
+        if (c.status === 'ativo') {
+          statusBadge = '<span class="status-pill status-ativo"><i data-lucide="radio" style="width: 10px; height: 10px;"></i> Ativo (Tráfego)</span>';
+        } else if (c.status === 'desativado') {
+          statusBadge = '<span class="status-pill status-desativado">Desativado</span>';
+        } else if (c.status === 'reuniao') {
+          statusBadge = '<span class="status-pill status-reuniao">Reunião sem fechar</span>';
+        } else {
+          statusBadge = '<span class="status-pill status-bocaboca">Boca a Boca</span>';
+        }
+
+        if (c.tagBadge) {
+          statusBadge += `<br><span class="status-pill" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); margin-top: 4px;">${c.tagBadge}</span>`;
+        }
+
+        const margemPct = c.calculatedTotal > 0 ? ((c.calculatedLucro / c.calculatedTotal) * 100).toFixed(0) : '0';
+
+        tr.innerHTML = `
+          <td>
+            <div class="client-cell">
+              <div class="client-avatar" style="background: ${c.avatarGrad || 'linear-gradient(135deg, #3b82f6, #8b5cf6)'};">${c.avatar || c.nome.substring(0, 2).toUpperCase()}</div>
+              <div class="client-meta">
+                <div class="client-name">${c.nome}</div>
+                <div class="client-sub">${c.nicho || 'Serviços'}</div>
+              </div>
+            </div>
+          </td>
+          <td>${statusBadge}</td>
+          <td><span class="mono-val" style="font-size: 12px;">${c.periodo || '—'}</span></td>
+          <td><span class="mono-val">${c.mesesPagos} meses</span></td>
+          <td>
+            <span class="mono-val" style="color: #60a5fa;">R$ ${Number(c.mensalidade).toLocaleString('pt-BR')}/mês</span>
+            <br><small style="color: #94a3b8;">${c.servicos || 'Serviços de Marketing'}</small>
+          </td>
+          <td>
+            <span class="mono-val" style="color: ${c.calculatedCustoAprendiz > 0 ? '#fbbf24' : '#64748b'};">
+              R$ ${c.calculatedCustoAprendiz.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </span>
+            ${c.custoAprendizMensal > 0 ? `<br><small style="color: #64748b;">(${c.mesesPagos}x R$ ${c.custoAprendizMensal})</small>` : ''}
+          </td>
+          <td>
+            <span class="mono-val" style="color: #34d399; font-weight: 800;">
+              R$ ${c.calculatedLucro.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </span>
+            ${c.calculatedTotal > 0 ? `<br><small style="color: #34d399;">${margemPct}% margem</small>` : ''}
+          </td>
+          <td>
+            <span class="mono-val" style="font-weight: 800;">
+              R$ ${c.calculatedTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </span>
+          </td>
+          <td style="text-align: center;">
+            <div class="table-actions" style="justify-content: center;">
+              <button class="btn-icon" onclick="editClient('${c.id}')" title="Editar Cliente">
+                <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
+              </button>
+              <button class="btn-icon delete" onclick="deleteClient('${c.id}')" title="Excluir Cliente">
+                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+              </button>
+            </div>
+          </td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+
+      lucide.createIcons();
+    }
+
+    // FILTRO DE CLIENTES
+    function filterClients(cat) {
+      currentFilter = cat;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      renderTable();
+    }
+
+    // MODAL DE CLIENTES (ADICIONAR / EDITAR)
+    function openClientModal(clientId = null) {
+      const modal = document.getElementById('clientModal');
+      const title = document.getElementById('modalTitle');
+      const form = document.getElementById('clientForm');
+
+      form.reset();
+
+      if (clientId) {
+        const c = clientsData.find(x => x.id === clientId);
+        if (c) {
+          title.innerHTML = '<i data-lucide="edit-3" style="width: 20px; height: 20px; color: #60a5fa;"></i> Editar Cliente';
+          document.getElementById('clientId').value = c.id;
+          document.getElementById('mNome').value = c.nome;
+          document.getElementById('mNicho').value = c.nicho || '';
+          document.getElementById('mOrigem').value = c.origem;
+          document.getElementById('mStatus').value = c.status;
+          document.getElementById('mMensalidade').value = c.mensalidade;
+          document.getElementById('mMesesPagos').value = c.mesesPagos;
+          document.getElementById('mCustoAprendiz').value = c.custoAprendizMensal || 0;
+          document.getElementById('mSetupExtra').value = c.setupExtra || 0;
+          document.getElementById('mPeriodo').value = c.periodo || '';
+          document.getElementById('mServicos').value = c.servicos || '';
+        }
+      } else {
+        title.innerHTML = '<i data-lucide="user-plus" style="width: 20px; height: 20px; color: #60a5fa;"></i> Novo Cliente';
+        document.getElementById('clientId').value = '';
+      }
+
+      modal.style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    function closeClientModal() {
+      document.getElementById('clientModal').style.display = 'none';
+    }
+
+    function saveClient(e) {
+      e.preventDefault();
+      const id = document.getElementById('clientId').value;
+      const nome = document.getElementById('mNome').value.trim();
+      const nicho = document.getElementById('mNicho').value.trim();
+      const origem = document.getElementById('mOrigem').value;
+      const status = document.getElementById('mStatus').value;
+      const mensalidade = parseFloat(document.getElementById('mMensalidade').value) || 0;
+      const mesesPagos = parseInt(document.getElementById('mMesesPagos').value) || 0;
+      const custoAprendizMensal = parseFloat(document.getElementById('mCustoAprendiz').value) || 0;
+      const setupExtra = parseFloat(document.getElementById('mSetupExtra').value) || 0;
+      const periodo = document.getElementById('mPeriodo').value.trim();
+      const servicos = document.getElementById('mServicos').value.trim();
+
+      if (id) {
+        // Edit existing
+        const idx = clientsData.findIndex(x => x.id === id);
+        if (idx !== -1) {
+          clientsData[idx] = {
+            ...clientsData[idx],
+            nome, nicho, origem, status, mensalidade, mesesPagos, custoAprendizMensal, setupExtra, periodo, servicos
+          };
+          // Remove override if present
+          delete clientsData[idx].overrideTotalBruto;
+        }
+      } else {
+        // Add new
+        const newId = 'c_' + Date.now();
+        const initials = nome.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+        clientsData.unshift({
+          id: newId,
+          nome, nicho, origem, status, mensalidade, mesesPagos, custoAprendizMensal, setupExtra, periodo, servicos,
+          avatar: initials,
+          avatarGrad: 'linear-gradient(135deg, #3b82f6, #8b5cf6)'
+        });
+      }
+
+      saveToStorage();
+      recalculateAndRender();
+      closeClientModal();
+      showToast('Cliente salvo e métricas recalculadas automaticamente!');
+    }
+
+    function editClient(id) {
+      openClientModal(id);
+    }
+
+    function deleteClient(id) {
+      const c = clientsData.find(x => x.id === id);
+      if (!c) return;
+      if (confirm(`Tem certeza que deseja excluir "${c.nome}"? Todas as métricas serão recalculadas.`)) {
+        clientsData = clientsData.filter(x => x.id !== id);
+        saveToStorage();
+        recalculateAndRender();
+        showToast(`Cliente "${c.nome}" removido!`);
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotice');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.style.display = 'flex';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3500);
+    }
+
+    // CHART.JS ENGINE
+    let chartTimeline = null;
+    let chartChannel = null;
+
+    function initCharts() {
       const ctxTimeline = document.getElementById('chartRevenueTimeline').getContext('2d');
-      new Chart(ctxTimeline, {
+      chartTimeline = new Chart(ctxTimeline, {
         type: 'line',
         data: {
           labels: ['Nov/25', 'Dez/25', 'Jan/26', 'Fev/26', 'Mar/26', 'Abr/26', 'Mai/26', 'Jun/26', 'Jul/26', 'Ago/26', 'Set/26'],
@@ -2011,10 +2498,10 @@
       });
 
       const ctxChannel = document.getElementById('chartChannelBreakdown').getContext('2d');
-      new Chart(ctxChannel, {
+      chartChannel = new Chart(ctxChannel, {
         type: 'doughnut',
         data: {
-          labels: ['Tráfego Pago Meta Ads (R$ 9.800)', 'Boca a Boca / Indicação (R$ 3.500)'],
+          labels: ['Tráfego Pago Meta Ads', 'Boca a Boca / Indicação'],
           datasets: [{
             data: [9800, 3500],
             backgroundColor: ['#3b82f6', '#8b5cf6'],
@@ -2039,6 +2526,17 @@
       calcSimulation();
     }
 
+    function updateCharts(trafego, bocaboca) {
+      if (!chartChannel) return;
+      chartChannel.data.datasets[0].data = [trafego, bocaboca];
+      chartChannel.data.labels = [
+        `Tráfego Pago (R$ ${trafego.toLocaleString('pt-BR')})`,
+        `Boca a Boca (R$ ${bocaboca.toLocaleString('pt-BR')})`
+      ];
+      chartChannel.update();
+    }
+
+    // CALCULADORA DE PRECIFICAÇÃO
     function calcPricing() {
       const horas = parseFloat(document.getElementById('inputHoras').value);
       const valorHora = parseFloat(document.getElementById('inputValorHora').value);
@@ -2057,6 +2555,7 @@
       document.getElementById('resPrecoVenda').innerText = 'R$ ' + precoVenda.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
     }
 
+    // SIMULADOR DE TRÁFEGO
     function calcSimulation() {
       const gasto = parseFloat(document.getElementById('inputGastoMensal').value);
       const cpl = parseFloat(document.getElementById('inputCPL').value);
@@ -2078,6 +2577,27 @@
       document.getElementById('resReceitaMes').innerText = 'R$ ' + receitaMensal.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
       document.getElementById('resLTVTotal').innerText = 'R$ ' + ltvTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
     }
+
+    function switchSection(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+      
+      document.getElementById(tabId).style.display = 'block';
+      event.currentTarget.classList.add('active');
+      lucide.createIcons();
+    }
+
+    // Checagem de Sessão inicial
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      if (sessionStorage.getItem('pr_auth_token')) {
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('mainDashboard').style.display = 'flex';
+        loadClients();
+        recalculateAndRender();
+        initCharts();
+      }
+    });
   </script>
 
 </body>
