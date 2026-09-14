@@ -1,0 +1,11 @@
+# Ignorar todas as pastas de conversas e anexos (Privacidade & LGPD)
+*/
+*.txt
+*.pdf
+*.md
+
+# Permitir apenas o painel, documentação e gitignore
+!index.html
+!painel_prime_rank.html
+!README.md
+!.gitignore
