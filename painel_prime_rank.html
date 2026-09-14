@@ -1076,6 +1076,10 @@
           <i data-lucide="user-plus" style="width: 15px; height: 15px;"></i>
           Novo Cliente
         </button>
+        <button class="btn-action" id="btnSyncGithub" onclick="handleSyncGithub()" title="Salvar alterações no repositório GitHub">
+          <i data-lucide="cloud-upload" style="width: 15px; height: 15px; color: #60a5fa;"></i>
+          <span id="lblSyncGithub">Salvar no GitHub</span>
+        </button>
         <button class="btn-action" onclick="window.print()">
           <i data-lucide="printer" style="width: 15px; height: 15px;"></i>
           Imprimir
@@ -1898,6 +1902,41 @@
     </div>
   </div>
 
+  <!-- MODAL DE CONFIGURAÇÃO DE SINCRONIZAÇÃO GITHUB -->
+  <div class="modal-backdrop" id="syncModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i data-lucide="github" style="width: 20px; height: 20px; color: #60a5fa;"></i> Sincronizar com GitHub (Código-Fonte)</h3>
+        <button class="modal-close" onclick="closeSyncModal()">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <div style="font-size: 13px; color: #cbd5e1; line-height: 1.5;">
+        Para que qualquer edição feita no painel seja <strong>gravada diretamente no repositório do GitHub</strong> (permitindo que você e seu sócio recarreguem de qualquer lugar e vejam os dados atualizados), insira seu Token de Acesso do GitHub (PAT).
+      </div>
+
+      <form onsubmit="saveGithubToken(event)">
+        <div class="input-field" style="margin-top: 10px;">
+          <label>GitHub Personal Access Token (PAT) com permissão de escrita:</label>
+          <div class="input-wrapper">
+            <i data-lucide="key" class="icon-prefix"></i>
+            <input type="password" id="inputGithubToken" placeholder="ghp_... ou gho_..." required />
+          </div>
+          <small style="color: #64748b; margin-top: 4px;">O token é salvo com segurança apenas no seu navegador (localStorage) e nunca é exposto publicamente.</small>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-action" onclick="closeSyncModal()">Cancelar</button>
+          <button type="submit" class="btn-action btn-primary-action">
+            <i data-lucide="check" style="width: 15px; height: 15px;"></i>
+            Conectar e Salvar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- TOAST NOTIFICATION -->
   <div id="toastNotice">
     <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
@@ -2103,9 +2142,34 @@
       }
     ];
 
-    // Carrega dados do LocalStorage ou padrão
+    // REPOSITÓRIO GITHUB CONFIG
+    const GITHUB_CONFIG = {
+      owner: "pokergames112",
+      repo: "prime-rank-dashboard",
+      filePath: "data/clients.json",
+      branch: "main"
+    };
+
     let clientsData = [];
-    function loadClients() {
+
+    // Carrega dados do GitHub (data/clients.json) prioritariamente com cache-busting
+    async function loadClients() {
+      try {
+        const res = await fetch('./data/clients.json?v=' + Date.now());
+        if (res.ok) {
+          const remoteData = await res.json();
+          if (Array.isArray(remoteData) && remoteData.length > 0) {
+            clientsData = remoteData;
+            localStorage.setItem('pr_crm_clients_v1', JSON.stringify(clientsData));
+            console.log('Dados carregados com sucesso do GitHub data/clients.json!');
+            return;
+          }
+        }
+      } catch(err) {
+        console.warn('Não foi possível carregar do GitHub remoto, usando cache local:', err);
+      }
+
+      // Fallback para LocalStorage ou Padrão
       const saved = localStorage.getItem('pr_crm_clients_v1');
       if (saved) {
         try {
@@ -2115,6 +2179,115 @@
         }
       } else {
         clientsData = [...DEFAULT_CLIENTS];
+      }
+    }
+
+    function checkSyncStatus() {
+      const token = localStorage.getItem('pr_github_token');
+      const btn = document.getElementById('btnSyncGithub');
+      const lbl = document.getElementById('lblSyncGithub');
+      if (token && btn) {
+        btn.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+        btn.style.background = 'rgba(16, 185, 129, 0.1)';
+        lbl.innerText = 'Salvar no GitHub ✓';
+      }
+    }
+
+    function openSyncModal() {
+      document.getElementById('inputGithubToken').value = localStorage.getItem('pr_github_token') || '';
+      document.getElementById('syncModal').style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    function closeSyncModal() {
+      document.getElementById('syncModal').style.display = 'none';
+    }
+
+    function saveGithubToken(e) {
+      e.preventDefault();
+      const token = document.getElementById('inputGithubToken').value.trim();
+      if (token) {
+        localStorage.setItem('pr_github_token', token);
+        closeSyncModal();
+        checkSyncStatus();
+        showToast('Token do GitHub salvo com sucesso!');
+        handleSyncGithub();
+      }
+    }
+
+    // Sincroniza e faz commit direto no GitHub
+    async function handleSyncGithub() {
+      const token = localStorage.getItem('pr_github_token');
+      if (!token) {
+        openSyncModal();
+        return;
+      }
+
+      const btn = document.getElementById('btnSyncGithub');
+      const lbl = document.getElementById('lblSyncGithub');
+      const origText = lbl.innerText;
+      lbl.innerText = 'Salvando...';
+      btn.style.opacity = '0.7';
+
+      try {
+        // 1. Obter o SHA atual do arquivo data/clients.json no GitHub
+        const getUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}?ref=${GITHUB_CONFIG.branch}`;
+        const getRes = await fetch(getUrl, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+
+        let fileSha = null;
+        if (getRes.ok) {
+          const fileInfo = await getRes.json();
+          fileSha = fileInfo.sha;
+        }
+
+        // 2. Prepara o conteúdo JSON em Base64
+        const jsonString = JSON.stringify(clientsData, null, 2);
+        const encodedContent = btoa(unescape(encodeURIComponent(jsonString)));
+
+        // 3. Executa o PUT para comitar diretamente no repositório
+        const putUrl = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.filePath}`;
+        const bodyData = {
+          message: `docs: Atualização automática da carteira de clientes via Dashboard [${new Date().toLocaleDateString('pt-BR')}]`,
+          content: encodedContent,
+          branch: GITHUB_CONFIG.branch
+        };
+        if (fileSha) bodyData.sha = fileSha;
+
+        const putRes = await fetch(putUrl, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(bodyData)
+        });
+
+        if (putRes.ok) {
+          showToast('✅ Dados gravados no código-fonte do GitHub com sucesso!');
+          lbl.innerText = 'Salvo no GitHub ✓';
+        } else {
+          const errData = await putRes.json();
+          console.error('Erro ao salvar no GitHub:', errData);
+          if (putRes.status === 401 || putRes.status === 403) {
+            alert('Token do GitHub inválido ou sem permissão de escrita no repositório. Por favor, atualize o token.');
+            openSyncModal();
+          } else {
+            alert('Erro ao salvar no GitHub: ' + (errData.message || 'Verifique sua conexão.'));
+          }
+          lbl.innerText = origText;
+        }
+      } catch(e) {
+        console.error('Exceção ao sincronizar com GitHub:', e);
+        alert('Erro ao conectar à API do GitHub.');
+        lbl.innerText = origText;
+      } finally {
+        btn.style.opacity = '1';
       }
     }
 
@@ -2158,14 +2331,15 @@
       }
     }
 
-    function unlockDashboard() {
+    async function unlockDashboard() {
       document.getElementById('loginOverlay').style.opacity = '0';
-      setTimeout(() => {
+      setTimeout(async () => {
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('mainDashboard').style.display = 'flex';
-        loadClients();
+        await loadClients();
         recalculateAndRender();
         initCharts();
+        checkSyncStatus();
         lucide.createIcons();
       }, 400);
     }
@@ -2414,6 +2588,10 @@
       recalculateAndRender();
       closeClientModal();
       showToast('Cliente salvo e métricas recalculadas automaticamente!');
+      // Se já tiver token do GitHub configurado, tenta salvar na nuvem em segundo plano
+      if (localStorage.getItem('pr_github_token')) {
+        handleSyncGithub();
+      }
     }
 
     function editClient(id) {
@@ -2428,6 +2606,9 @@
         saveToStorage();
         recalculateAndRender();
         showToast(`Cliente "${c.nome}" removido!`);
+        if (localStorage.getItem('pr_github_token')) {
+          handleSyncGithub();
+        }
       }
     }
 
@@ -2588,14 +2769,15 @@
     }
 
     // Checagem de Sessão inicial
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       lucide.createIcons();
       if (sessionStorage.getItem('pr_auth_token')) {
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('mainDashboard').style.display = 'flex';
-        loadClients();
+        await loadClients();
         recalculateAndRender();
         initCharts();
+        checkSyncStatus();
       }
     });
   </script>
