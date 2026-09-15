@@ -1316,6 +1316,9 @@
       <button class="nav-tab" onclick="switchSection('tab-planejamento')">
         <i data-lucide="trending-up" style="width: 16px; height: 16px;"></i> Planejador de Ads & ROI
       </button>
+      <a href="simulador_meta_ads.html" class="nav-tab" style="color: #34d399; text-decoration: none; border: 1px solid rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.08);">
+        <i data-lucide="calculator" style="width: 16px; height: 16px;"></i> Simulador Dinâmico & Criativos 🚀
+      </a>
     </nav>
 
     <!-- KPI CARDS (REATIVOS) -->
@@ -1755,57 +1758,42 @@
     <!-- ABA: SERVIÇOS & PRECIFICAÇÃO (PERGUNTAS DO SÓCIO) -->
     <div id="tab-servicos" class="tab-content" style="display: none;">
       <div class="grid-2">
-        <!-- O que oferecemos vs Novos Serviços -->
+        <!-- O que oferecemos vs Novos Serviços (DINÂMICO) -->
         <div class="section-card">
-          <div class="section-header">
+          <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
             <div class="section-title-wrap">
               <h2><i data-lucide="briefcase" style="width: 20px; height: 20px; color: #60a5fa;"></i> Matriz de Serviços (Respostas ao Sócio)</h2>
               <p>Serviços atuais vs Novas linhas de alto valor que a Prime Rank pode vender</p>
             </div>
+            <button class="btn-action btn-primary-action" onclick="openServiceModal()" style="font-size: 12px; padding: 7px 14px; background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);">
+              <i data-lucide="plus-circle" style="width: 15px; height: 15px;"></i> Novo Serviço
+            </button>
           </div>
 
-          <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 18px;">
+            <!-- SEÇÃO 1: OFERECEMOS HOJE (COM BOTÃO PARA JOGAR PARA BAIXO / EDITAR) -->
             <div>
-              <h3 style="font-size: 14px; font-weight: 700; color: #34d399; margin-bottom: 8px;">
-                <i data-lucide="check" style="width: 16px; height: 16px; display: inline;"></i> 1. O que OFERECEMOS hoje (Preços Praticados):
-              </h3>
-              <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
-                <li style="background: rgba(255, 255, 255, 0.02); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-card); display: flex; justify-content: space-between;">
-                  <span><strong>Gestão de Tráfego Meta Ads:</strong> Campanhas e inteligência de leads</span>
-                  <span class="mono-val" style="color: #60a5fa;">R$ 500 a R$ 700/mês</span>
-                </li>
-                <li style="background: rgba(255, 255, 255, 0.02); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-card); display: flex; justify-content: space-between;">
-                  <span><strong>Criação de Sites / Landing Pages:</strong> Páginas responsivas</span>
-                  <span class="mono-val" style="color: #60a5fa;">R$ 500 a R$ 800 (Setup)</span>
-                </li>
-                <li style="background: rgba(255, 255, 255, 0.02); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-card); display: flex; justify-content: space-between;">
-                  <span><strong>Tráfego + Redes Sociais (Combo):</strong> Anúncios + artes do feed</span>
-                  <span class="mono-val" style="color: #60a5fa;">R$ 700,00/mês</span>
-                </li>
-                <li style="background: rgba(255, 255, 255, 0.02); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-card); display: flex; justify-content: space-between;">
-                  <span><strong>Identidade Visual / Logos:</strong> Criação e vetorização</span>
-                  <span class="mono-val" style="color: #60a5fa;">R$ 80,00</span>
-                </li>
-                <li style="background: rgba(255, 255, 255, 0.02); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-card); display: flex; justify-content: space-between;">
-                  <span><strong>Blog & SEO:</strong> Postagens periódicas para Google</span>
-                  <span class="mono-val" style="color: #60a5fa;">R$ 200,00/mês</span>
-                </li>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h3 style="font-size: 14px; font-weight: 700; color: #34d399; display: flex; align-items: center; gap: 6px;">
+                  <i data-lucide="check" style="width: 16px; height: 16px;"></i> 1. O que OFERECEMOS hoje (Preços Praticados):
+                </h3>
+                <span id="countServicosAtivos" style="font-size: 11px; font-weight: 700; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 2px 8px; border-radius: 12px;">5 serviços</span>
+              </div>
+              <ul id="listaServicosAtivos" style="list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+                <!-- Carregado via JavaScript -->
               </ul>
             </div>
 
-            <div style="margin-top: 12px;">
-              <h3 style="font-size: 14px; font-weight: 700; color: #fbbf24; margin-bottom: 8px;">
-                <i data-lucide="plus-circle" style="width: 16px; height: 16px; display: inline;"></i> 2. O que NÃO OFERECEMOS e PODEMOS oferecer:
-              </h3>
-              <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
-                <li style="background: rgba(245, 158, 11, 0.06); padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.2);">
-                  <strong style="color: #fbbf24;">Automação de WhatsApp e CRM (Typebot / ManyChat):</strong>
-                  <p style="color: #94a3b8; margin-top: 2px;">Resolve o maior problema dos clientes: responder leads rápido para não esfriar. Cobrar <strong>R$ 350 a R$ 500/mês</strong> por esse setup.</p>
-                </li>
-                <li style="background: rgba(245, 158, 11, 0.06); padding: 10px 12px; border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.2);">
-                  <strong style="color: #fbbf24;">Google Ads (Rede de Pesquisa + Google Maps Local):</strong>
-                  <p style="color: #94a3b8; margin-top: 2px;">Para negócios onde o cliente busca ativamente no Google (Buffet, Advocacia, Óptica). Cobrar <strong>R$ 600 a R$ 800/mês</strong> a mais.</p>
-                </li>
+            <!-- SEÇÃO 2: NÃO OFERECEMOS (COM BOTÃO DE SETINHA PRA CIMA TIPO CHECK PARA SUBIR / OFERTAR) -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h3 style="font-size: 14px; font-weight: 700; color: #fbbf24; display: flex; align-items: center; gap: 6px;">
+                  <i data-lucide="clock" style="width: 16px; height: 16px;"></i> 2. O que NÃO OFERECEMOS e PODEMOS oferecer:
+                </h3>
+                <span id="countServicosInativos" style="font-size: 11px; font-weight: 700; background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); padding: 2px 8px; border-radius: 12px;">2 serviços</span>
+              </div>
+              <ul id="listaServicosInativos" style="list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+                <!-- Carregado via JavaScript -->
               </ul>
             </div>
           </div>
@@ -2097,6 +2085,61 @@
           <button type="submit" class="btn-action btn-primary-action">
             <i data-lucide="check" style="width: 15px; height: 15px;"></i>
             Salvar e Recalcular
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE CADASTRO / EDIÇÃO DE SERVIÇO -->
+  <div class="modal-backdrop" id="serviceModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="serviceModalTitle"><i data-lucide="briefcase" style="width: 20px; height: 20px; color: #60a5fa;"></i> Novo Serviço</h3>
+        <button class="modal-close" onclick="closeServiceModal()">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <form id="serviceForm" onsubmit="saveService(event)">
+        <input type="hidden" id="serviceId" />
+
+        <div class="input-field">
+          <label>Nome do Serviço *</label>
+          <div class="input-wrapper">
+            <input type="text" id="sNome" placeholder="Ex: Gestão de Tráfego Google Ads" required />
+          </div>
+        </div>
+
+        <div class="input-field" style="margin-top: 12px;">
+          <label>Descrição / Detalhe da Entrega</label>
+          <div class="input-wrapper">
+            <input type="text" id="sDesc" placeholder="Ex: Campanhas de pesquisa e Google Meu Negócio" required />
+          </div>
+        </div>
+
+        <div class="input-field" style="margin-top: 12px;">
+          <label>Preço / Valor Ofertado *</label>
+          <div class="input-wrapper">
+            <input type="text" id="sPreco" placeholder="Ex: R$ 600 a R$ 800/mês" required />
+          </div>
+        </div>
+
+        <div class="input-field" style="margin-top: 12px;">
+          <label>Status / Posição na Matriz *</label>
+          <div class="input-wrapper">
+            <select id="sStatus" required>
+              <option value="ativo">1. Ofertando Hoje (Vai para a Lista de Cima)</option>
+              <option value="inativo">2. Não Ofertado / Backlog (Vai para a Lista de Baixo)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-action" onclick="closeServiceModal()">Cancelar</button>
+          <button type="submit" class="btn-action btn-primary-action">
+            <i data-lucide="check" style="width: 15px; height: 15px;"></i>
+            Salvar Serviço
           </button>
         </div>
       </form>
@@ -2960,18 +3003,225 @@
       document.getElementById('resLTVTotal').innerText = 'R$ ' + ltvTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
     }
 
+    // ==========================================
+    // GESTÃO DINÂMICA DE SERVIÇOS (MATRIZ DE SERVIÇOS)
+    // ==========================================
+    const defaultServices = [
+      { id: 's1', titulo: 'Gestão de Tráfego Meta Ads', desc: 'Campanhas e inteligência de leads', preco: 'R$ 500 a R$ 700/mês', ofertado: true },
+      { id: 's2', titulo: 'Criação de Sites / Landing Pages', desc: 'Páginas responsivas de alta conversão', preco: 'R$ 500 a R$ 800 (Setup)', ofertado: true },
+      { id: 's3', titulo: 'Tráfego + Redes Sociais (Combo)', desc: 'Anúncios + artes do feed e planejamento', preco: 'R$ 700,00/mês', ofertado: true },
+      { id: 's4', titulo: 'Identidade Visual / Logos', desc: 'Criação e vetorização profissional', preco: 'R$ 80,00', ofertado: true },
+      { id: 's5', titulo: 'Blog & SEO', desc: 'Postagens periódicas indexadas no Google', preco: 'R$ 200,00/mês', ofertado: true },
+      { id: 's6', titulo: 'Automação de WhatsApp e CRM (Typebot / ManyChat)', desc: 'Resolve o maior problema dos clientes: responder leads rápido para não esfriar. Cobrar R$ 350 a R$ 500/mês por esse setup.', preco: 'R$ 350 a R$ 500/mês', ofertado: false },
+      { id: 's7', titulo: 'Google Ads (Rede de Pesquisa + Google Maps Local)', desc: 'Para negócios onde o cliente busca ativamente no Google (Buffet, Advocacia, Óptica). Cobrar R$ 600 a R$ 800/mês a mais.', preco: 'R$ 600 a R$ 800/mês', ofertado: false }
+    ];
+
+    let servicesData = [];
+
+    function loadServices() {
+      const saved = localStorage.getItem('prime_rank_services');
+      if (saved) {
+        try {
+          servicesData = JSON.parse(saved);
+        } catch (e) {
+          servicesData = [...defaultServices];
+        }
+      } else {
+        servicesData = [...defaultServices];
+      }
+      renderServices();
+    }
+
+    function saveServicesStorage() {
+      localStorage.setItem('prime_rank_services', JSON.stringify(servicesData));
+    }
+
+    function renderServices() {
+      const listaAtivos = document.getElementById('listaServicosAtivos');
+      const listaInativos = document.getElementById('listaServicosInativos');
+      if (!listaAtivos || !listaInativos) return;
+
+      const ativos = servicesData.filter(s => s.ofertado);
+      const inativos = servicesData.filter(s => !s.ofertado);
+
+      const countAtivosEl = document.getElementById('countServicosAtivos');
+      const countInativosEl = document.getElementById('countServicosInativos');
+      if (countAtivosEl) countAtivosEl.innerText = `${ativos.length} serviços`;
+      if (countInativosEl) countInativosEl.innerText = `${inativos.length} serviços`;
+
+      // Render lista 1 (OFERECEMOS HOJE) com botão para descer / desativar
+      if (ativos.length === 0) {
+        listaAtivos.innerHTML = '<li style="color: #64748b; font-size: 13px; font-style: italic; padding: 10px;">Nenhum serviço ativo no momento. Suba algum da lista abaixo ou crie um novo.</li>';
+      } else {
+        listaAtivos.innerHTML = ativos.map(s => `
+          <li style="background: rgba(255, 255, 255, 0.02); padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border-card); display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: var(--transition);">
+            <div style="flex: 1;">
+              <div style="font-weight: 700; color: #f8fafc; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></span>
+                ${s.titulo}
+              </div>
+              <div style="color: #94a3b8; font-size: 12px; margin-top: 2px;">${s.desc}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+              <span class="mono-val" style="color: #60a5fa; font-size: 12px; font-weight: 700; background: rgba(59, 130, 246, 0.1); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(59, 130, 246, 0.2); white-space: nowrap;">
+                ${s.preco}
+              </span>
+              <button type="button" onclick="moveServiceDown('${s.id}')" title="Desativar / Jogar para Não Ofertado" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; border-radius: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;">
+                <i data-lucide="arrow-down" style="width: 14px; height: 14px;"></i>
+              </button>
+              <button type="button" onclick="editService('${s.id}')" title="Editar Serviço e Valor" style="background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; border-radius: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;">
+                <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
+              </button>
+              <button type="button" onclick="deleteService('${s.id}')" title="Excluir Serviço" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;">
+                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+              </button>
+            </div>
+          </li>
+        `).join('');
+      }
+
+      // Render lista 2 (NÃO OFERECEMOS / PODEMOS OFERECER) com botão setinha para cima tipo check
+      if (inativos.length === 0) {
+        listaInativos.innerHTML = '<li style="color: #64748b; font-size: 13px; font-style: italic; padding: 10px;">Nenhum serviço em espera.</li>';
+      } else {
+        listaInativos.innerHTML = inativos.map(s => `
+          <li style="background: rgba(245, 158, 11, 0.05); padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2); display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: var(--transition);">
+            <div style="flex: 1;">
+              <div style="font-weight: 700; color: #fbbf24; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #fbbf24;"></span>
+                ${s.titulo}
+              </div>
+              <div style="color: #94a3b8; font-size: 12px; margin-top: 2px; line-height: 1.4;">${s.desc}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+              <span class="mono-val" style="color: #fbbf24; font-size: 12px; font-weight: 700; background: rgba(245, 158, 11, 0.1); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.25); white-space: nowrap;">
+                ${s.preco}
+              </span>
+              <!-- Botão com setinha para cima e check para ativar e subir -->
+              <button type="button" onclick="moveServiceUp('${s.id}')" title="Ativar / Subir para Serviços Ofertados (Check)" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; border-radius: 6px; padding: 0 9px; height: 28px; display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                <i data-lucide="arrow-up" style="width: 14px; height: 14px;"></i>
+                <i data-lucide="check" style="width: 13px; height: 13px;"></i>
+                <span>Ofertar</span>
+              </button>
+              <button type="button" onclick="editService('${s.id}')" title="Editar Serviço e Valor" style="background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; border-radius: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;">
+                <i data-lucide="edit-3" style="width: 14px; height: 14px;"></i>
+              </button>
+              <button type="button" onclick="deleteService('${s.id}')" title="Excluir Serviço" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; border-radius: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;">
+                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+              </button>
+            </div>
+          </li>
+        `).join('');
+      }
+
+      lucide.createIcons();
+    }
+
+    function moveServiceUp(id) {
+      const s = servicesData.find(x => x.id === id);
+      if (s) {
+        s.ofertado = true;
+        saveServicesStorage();
+        renderServices();
+        showToast(`Serviço "${s.titulo}" ativado e promovido para Ofertados! 🚀`);
+      }
+    }
+
+    function moveServiceDown(id) {
+      const s = servicesData.find(x => x.id === id);
+      if (s) {
+        s.ofertado = false;
+        saveServicesStorage();
+        renderServices();
+        showToast(`Serviço "${s.titulo}" desativado e movido para Não Ofertados.`);
+      }
+    }
+
+    function openServiceModal(id = null) {
+      const modal = document.getElementById('serviceModal');
+      const form = document.getElementById('serviceForm');
+      const title = document.getElementById('serviceModalTitle');
+      form.reset();
+
+      if (id) {
+        const s = servicesData.find(x => x.id === id);
+        if (s) {
+          title.innerHTML = '<i data-lucide="edit-3" style="width: 20px; height: 20px; color: #60a5fa;"></i> Editar Serviço';
+          document.getElementById('serviceId').value = s.id;
+          document.getElementById('sNome').value = s.titulo;
+          document.getElementById('sDesc').value = s.desc;
+          document.getElementById('sPreco').value = s.preco;
+          document.getElementById('sStatus').value = s.ofertado ? 'ativo' : 'inativo';
+        }
+      } else {
+        title.innerHTML = '<i data-lucide="briefcase" style="width: 20px; height: 20px; color: #60a5fa;"></i> Novo Serviço';
+        document.getElementById('serviceId').value = '';
+        document.getElementById('sStatus').value = 'ativo';
+      }
+
+      modal.style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    function closeServiceModal() {
+      document.getElementById('serviceModal').style.display = 'none';
+    }
+
+    function saveService(e) {
+      e.preventDefault();
+      const id = document.getElementById('serviceId').value;
+      const titulo = document.getElementById('sNome').value.trim();
+      const desc = document.getElementById('sDesc').value.trim();
+      const preco = document.getElementById('sPreco').value.trim();
+      const ofertado = document.getElementById('sStatus').value === 'ativo';
+
+      if (id) {
+        const idx = servicesData.findIndex(x => x.id === id);
+        if (idx !== -1) {
+          servicesData[idx] = { ...servicesData[idx], titulo, desc, preco, ofertado };
+        }
+      } else {
+        const newId = 's_' + Date.now();
+        servicesData.unshift({ id: newId, titulo, desc, preco, ofertado });
+      }
+
+      saveServicesStorage();
+      renderServices();
+      closeServiceModal();
+      showToast('Serviço salvo com sucesso!');
+    }
+
+    function editService(id) {
+      openServiceModal(id);
+    }
+
+    function deleteService(id) {
+      const s = servicesData.find(x => x.id === id);
+      if (!s) return;
+      if (confirm(`Deseja realmente excluir o serviço "${s.titulo}"?`)) {
+        servicesData = servicesData.filter(x => x.id !== id);
+        saveServicesStorage();
+        renderServices();
+        showToast(`Serviço "${s.titulo}" excluído!`);
+      }
+    }
+
     function switchSection(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
       
       document.getElementById(tabId).style.display = 'block';
       event.currentTarget.classList.add('active');
+      if (tabId === 'tab-servicos') {
+        renderServices();
+      }
       lucide.createIcons();
     }
 
     // Checagem de Sessão inicial
     window.addEventListener('DOMContentLoaded', async () => {
       lucide.createIcons();
+      loadServices();
       if (sessionStorage.getItem('pr_auth_token')) {
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('mainDashboard').style.display = 'flex';

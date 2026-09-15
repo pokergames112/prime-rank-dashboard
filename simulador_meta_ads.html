@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador Dinâmico de Tráfego & Escala — Prime Rank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-dark: #070a12;
+      --bg-card: #0d1527;
+      --bg-card-glass: rgba(13, 21, 39, 0.85);
+      --border-card: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(59, 130, 246, 0.35);
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.25);
+      --accent: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.25);
+      --gold: #f59e0b;
+      --gold-glow: rgba(245, 158, 11, 0.2);
+      --danger: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 24px;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 45%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.12) 0px, transparent 45%),
+        radial-gradient(at 50% 30%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* HEADER */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: 20px 28px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #2563eb, #10b981);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+      color: white;
+    }
+
+    .brand-info h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-info h1 span {
+      background: linear-gradient(90deg, #60a5fa, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-card);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    /* PRESETS BAR */
+    .presets-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(13, 21, 39, 0.6);
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-card);
+      flex-wrap: wrap;
+    }
+
+    .preset-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 6px;
+    }
+
+    .preset-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-card);
+      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preset-btn:hover {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: #3b82f6;
+      color: #fff;
+    }
+
+    .preset-btn.active {
+      background: #2563eb;
+      border-color: #60a5fa;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+    }
+
+    /* MAIN GRID */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 1050px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* CARD STYLING */
+    .card {
+      background: var(--bg-card-glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-main);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-card);
+    }
+
+    /* CONTROLS FORM */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .form-label-wrap .val-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #60a5fa;
+      background: rgba(59, 130, 246, 0.12);
+      padding: 3px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(59, 130, 246, 0.25);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .text-input-wrapper {
+      position: relative;
+      flex: 1;
+    }
+
+    .text-input-wrapper span.prefix {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    input[type="number"], input[type="text"] {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-card);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 12px 10px 38px;
+      border-radius: 8px;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    input[type="number"]:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Custom range slider */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #3b82f6;
+      border: 2px solid #fff;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* KPI TILES */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 850px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .kpi-tile {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-tile::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: #3b82f6;
+    }
+
+    .kpi-tile.green::before { background: #10b981; }
+    .kpi-tile.gold::before { background: #f59e0b; }
+    .kpi-tile.purple::before { background: #8b5cf6; }
+
+    .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .kpi-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    /* CREATIVES ENGINE CARD */
+    .creatives-box {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(16, 185, 129, 0.08));
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .creatives-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .creatives-badge {
+      background: #2563eb;
+      color: white;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+
+    .creative-slots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .slot-card {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .slot-card.winner {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.08);
+    }
+
+    .slot-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+
+    .slot-budget {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: #34d399;
+    }
+
+    .slot-type {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    /* TABLE */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-card);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #cbd5e1;
+      white-space: nowrap;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    .tag.green {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .tag.blue {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .tag.gold {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    /* CALLOUT */
+    .callout {
+      background: rgba(59, 130, 246, 0.08);
+      border-left: 3px solid #3b82f6;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 13px;
+      color: #cbd5e1;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .callout i {
+      color: #60a5fa;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* TOAST */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #10b981;
+      color: white;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: var(--transition);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- HEADER -->
+    <header class="top-header">
+      <div class="brand-wrap">
+        <div class="brand-logo">
+          <i data-lucide="calculator" style="width: 26px; height: 26px;"></i>
+        </div>
+        <div class="brand-info">
+          <h1>Prime Rank <span>• Planejador de Mídia & Escala</span></h1>
+          <p>Simulador Dinâmico de Tráfego Pago, Alocação de Criativos e Retorno Financeiro</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-action btn-primary" onclick="copyWhatsAppPlan()">
+          <i data-lucide="share-2" style="width: 16px; height: 16px;"></i> Copiar Resumo p/ Danilo
+        </button>
+        <a href="index.html" class="btn-action">
+          <i data-lucide="layout-dashboard" style="width: 16px; height: 16px;"></i> Abrir Painel Geral
+        </a>
+      </div>
+    </header>
+
+    <!-- PRESETS BAR -->
+    <div class="presets-bar">
+      <div class="preset-label">
+        <i data-lucide="sparkles" style="width: 14px; height: 14px; color: #fbbf24;"></i> Cenários Rápidos:
+      </div>
+      <button class="preset-btn" onclick="applyPreset(1000, 30, this)">
+        🌱 R$ 1.000 (30 dias)
+      </button>
+      <button class="preset-btn active" onclick="applyPreset(2524, 46, this)">
+        🎯 R$ 2.524 (Meta 10 Clientes até 30/Out)
+      </button>
+      <button class="preset-btn" onclick="applyPreset(5000, 30, this)">
+        🚀 R$ 5.000 (30 dias Turbo)
+      </button>
+      <button class="preset-btn" onclick="applyPreset(10000, 30, this)">
+        💎 R$ 10.000 (Escala Máxima)
+      </button>
+    </div>
+
+    <!-- MAIN INTERACTIVE GRID -->
+    <div class="main-grid">
+      
+      <!-- CONTROLS COLUMN -->
+      <div class="card">
+        <div class="card-title">
+          <i data-lucide="sliders-horizontal" style="width: 18px; height: 18px; color: #60a5fa;"></i>
+          Parâmetros do Investimento
+        </div>
+
+        <!-- Investimento Total -->
+        <div class="form-group">
+          <div class="form-label-wrap">
+            <span>Investimento Total em Mídia:</span>
+            <span class="val-badge" id="lblOrcamento">R$ 2.524,00</span>
+          </div>
+          <div class="input-row">
+            <div class="text-input-wrapper">
+              <span class="prefix">R$</span>
+              <input type="number" id="numOrcamento" value="2524" min="300" max="50000" step="50" oninput="syncOrcamento(this.value)" />
+            </div>
+          </div>
+          <input type="range" id="rangeOrcamento" min="500" max="15000" step="100" value="2524" oninput="syncOrcamento(this.value)" />
+        </div>
+
+        <!-- Período em Dias -->
+        <div class="form-group">
+          <div class="form-label-wrap">
+            <span>Período de Veiculação (Dias):</span>
+            <span class="val-badge" id="lblDias">46 dias</span>
+          </div>
+          <input type="range" id="rangeDias" min="7" max="90" step="1" value="46" oninput="syncDias(this.value)" />
+        </div>
+
+        <!-- Taxa de Depósito / IOF Meta -->
+        <div class="form-group">
+          <div class="form-label-wrap">
+            <span>Taxas da Meta / Depósito / IOF:</span>
+            <span class="val-badge" id="lblTaxaMeta">12%</span>
+          </div>
+          <input type="range" id="rangeTaxaMeta" min="0" max="25" step="1" value="12" oninput="syncTaxaMeta(this.value)" />
+        </div>
+
+        <!-- CPL Estimado -->
+        <div class="form-group">
+          <div class="form-label-wrap">
+            <span>Custo por Lead no WhatsApp (CPL):</span>
+            <span class="val-badge" id="lblCPL">R$ 12,84</span>
+          </div>
+          <input type="range" id="rangeCPL" min="5" max="35" step="0.5" value="12.84" oninput="syncCPL(this.value)" />
+          <span style="font-size: 11px; color: #64748b;">* Baseado na média auditada da Fase 2 da Prime Rank (R$ 12,84)</span>
+        </div>
+
+        <!-- Taxa de Conversão -->
+        <div class="form-group">
+          <div class="form-label-wrap">
+            <span>Taxa de Conversão em Vendas:</span>
+            <span class="val-badge" id="lblConv">6.0%</span>
+          </div>
+          <input type="range" id="rangeConv" min="2" max="15" step="0.5" value="6.0" oninput="syncConv(this.value)" />
+          <span style="font-size: 11px; color: #64748b;">* Histórico real da agência: 5 fechamentos em 83 leads (6,02%)</span>
+        </div>
+
+        <!-- Ticket Médio -->
+        <div class="form-group">
+          <div class="form-label-wrap">
+            <span>Mensalidade Cobrada do Cliente:</span>
+            <span class="val-badge" id="lblTicket">R$ 650,00</span>
+          </div>
+          <input type="range" id="rangeTicket" min="400" max="1500" step="50" value="650" oninput="syncTicket(this.value)" />
+        </div>
+
+        <!-- Base Atual de Clientes -->
+        <div class="form-group">
+          <div class="form-label-wrap">
+            <span>Clientes Já Pagantes Atuais:</span>
+            <span class="val-badge" id="lblBaseAtual">2 clientes (R$ 1.400)</span>
+          </div>
+          <input type="range" id="rangeBaseAtual" min="0" max="10" step="1" value="2" oninput="syncBaseAtual(this.value)" />
+        </div>
+
+      </div>
+
+      <!-- RESULTS & INTELLIGENCE COLUMN -->
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        
+        <!-- KPI METRICS SUMMARY -->
+        <div class="kpi-grid">
+          
+          <div class="kpi-tile">
+            <div class="kpi-label">Investimento Diário</div>
+            <div class="kpi-value" id="kpiDiario">R$ 54,87</div>
+            <div class="kpi-sub" id="kpiDiarioSub">R$ 48,99 líquido em anúncios</div>
+          </div>
+
+          <div class="kpi-tile green">
+            <div class="kpi-label">Leads Esperados</div>
+            <div class="kpi-value" id="kpiLeads" style="color: #34d399;">175 leads</div>
+            <div class="kpi-sub" id="kpiLeadsSub">~3,8 conversas por dia</div>
+          </div>
+
+          <div class="kpi-tile gold">
+            <div class="kpi-label">Novos Contratos</div>
+            <div class="kpi-value" id="kpiNovosClientes" style="color: #fbbf24;">10.5 clientes</div>
+            <div class="kpi-sub" id="kpiCAC">CAC Médio: R$ 240,42</div>
+          </div>
+
+          <div class="kpi-tile purple">
+            <div class="kpi-label">Novo MRR Recorrente</div>
+            <div class="kpi-value" id="kpiNovoMRR" style="color: #a78bfa;">+ R$ 6.825/mês</div>
+            <div class="kpi-sub" id="kpiMRRTotal">MRR Total: R$ 8.225/mês</div>
+          </div>
+
+        </div>
+
+        <!-- CREATIVES ALLOCATION ENGINE (VALIDADO PELA META) -->
+        <div class="creatives-box">
+          <div class="creatives-header">
+            <div>
+              <h3 style="font-size: 15px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="layers" style="width: 18px; height: 18px; color: #60a5fa;"></i>
+                Recomendação de Criativos Ativos (Regra do Algoritmo Meta)
+              </h3>
+              <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">
+                Para sair da fase de aprendizado sem canibalizar o leilão, cada anúncio precisa de pelo menos <strong>R$ 15 a R$ 25/dia</strong>.
+              </p>
+            </div>
+            <div class="creatives-badge" id="badgeCriativos">
+              <i data-lucide="sparkles" style="width: 14px; height: 14px;"></i>
+              <span id="txtQtdCriativos">3 Criativos Ativos</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Slots Grid -->
+          <div class="creative-slots-grid" id="slotsGrid">
+            <!-- Rendered by JS -->
+          </div>
+
+          <div class="callout" style="margin-top: 4px;">
+            <i data-lucide="info"></i>
+            <div id="creativeVerdictText">
+              Com R$ 54,87/dia, o ideal são <strong>3 anúncios rodando simultaneamente</strong> (ex: R$ 18,29/dia por criativo): 2 focados nos ângulos que mais convertem (prova social/portfólio) e 1 em teste de novo gancho.
+            </div>
+          </div>
+        </div>
+
+        <!-- PROGRESSION TABLE -->
+        <div class="card" style="padding: 20px;">
+          <div class="card-title">
+            <i data-lucide="trending-up" style="width: 18px; height: 18px; color: #34d399;"></i>
+            Fluxo de Caixa & O Investimento se Pagando
+          </div>
+
+          <div class="table-wrap">
+            <table id="progTable">
+              <thead>
+                <tr>
+                  <th>Fase / Semana</th>
+                  <th>Clientes Acumulados</th>
+                  <th>Receita Mensal (MRR)</th>
+                  <th>Tráfego Semanal</th>
+                  <th>Custo Operacional</th>
+                  <th>Do Bolso do Danilo</th>
+                  <th>Saldo Líquido Caixa</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+                <!-- Injected by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout" style="background: rgba(16, 185, 129, 0.08); border-color: #10b981;">
+            <i data-lucide="shield-check" style="color: #34d399;"></i>
+            <div id="daniloVerdictText">
+              <strong>Veredito para o Danilo:</strong> Como a agência já tem 2 clientes pagando R$ 1.400/mês, o fluxo de caixa já cobre o tráfego a partir da 2ª semana. O Danilo coloca no máximo <strong>R$ 0,00 a R$ 400</strong> de suporte de largada, e o próprio Pix dos novos clientes recupera tudo!
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast">
+    <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
+    <span>Resumo copiado com sucesso!</span>
+  </div>
+
+  <script>
+    // State
+    const state = {
+      orcamentoTotal: 2524,
+      dias: 46,
+      taxaMeta: 12,
+      cpl: 12.84,
+      taxaConv: 6.0,
+      ticketMedio: 650,
+      baseAtualQtd: 2,
+      mensalidadeAtual: 700,
+      custoAprendizPorCliente: 200
+    };
+
+    // Preset helper
+    function applyPreset(orc, dias, btnElement) {
+      state.orcamentoTotal = orc;
+      state.dias = dias;
+      document.getElementById('numOrcamento').value = orc;
+      document.getElementById('rangeOrcamento').value = Math.min(orc, 15000);
+      document.getElementById('rangeDias').value = dias;
+      document.getElementById('lblDias').innerText = dias + ' dias';
+
+      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+      if (btnElement) {
+        btnElement.classList.add('active');
+      }
+
+      recalc();
+    }
+
+    // Sync helpers
+    function syncOrcamento(val) {
+      const v = Math.max(100, Number(val) || 0);
+      state.orcamentoTotal = v;
+      document.getElementById('lblOrcamento').innerText = formatBRL(v);
+      document.getElementById('numOrcamento').value = v;
+      document.getElementById('rangeOrcamento').value = Math.min(v, 15000);
+      recalc();
+    }
+
+    function syncDias(val) {
+      state.dias = Number(val);
+      document.getElementById('lblDias').innerText = state.dias + ' dias';
+      recalc();
+    }
+
+    function syncTaxaMeta(val) {
+      state.taxaMeta = Number(val);
+      document.getElementById('lblTaxaMeta').innerText = state.taxaMeta + '%';
+      recalc();
+    }
+
+    function syncCPL(val) {
+      state.cpl = Number(val);
+      document.getElementById('lblCPL').innerText = formatBRL(state.cpl);
+      recalc();
+    }
+
+    function syncConv(val) {
+      state.taxaConv = Number(val);
+      document.getElementById('lblConv').innerText = state.taxaConv.toFixed(1) + '%';
+      recalc();
+    }
+
+    function syncTicket(val) {
+      state.ticketMedio = Number(val);
+      document.getElementById('lblTicket').innerText = formatBRL(state.ticketMedio);
+      recalc();
+    }
+
+    function syncBaseAtual(val) {
+      state.baseAtualQtd = Number(val);
+      const totalBase = state.baseAtualQtd * state.mensalidadeAtual;
+      document.getElementById('lblBaseAtual').innerText = `${state.baseAtualQtd} clientes (${formatBRL(totalBase)})`;
+      recalc();
+    }
+
+    function formatBRL(val) {
+      return 'R$ ' + Number(val).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // Main calculation engine
+    function recalc() {
+      // 1. Math calculations
+      const totalBruto = state.orcamentoTotal;
+      const fatorTaxa = 1 + (state.taxaMeta / 100);
+      const totalLiquidoMidia = totalBruto / fatorTaxa;
+      
+      const gastoDiarioBruto = totalBruto / state.dias;
+      const gastoDiarioLiquido = totalLiquidoMidia / state.dias;
+      const gastoSemanalBruto = gastoDiarioBruto * 7;
+
+      const totalLeads = Math.floor(totalLiquidoMidia / state.cpl);
+      const leadsPorDia = (totalLeads / state.dias).toFixed(1);
+
+      const novosClientes = (totalLeads * (state.taxaConv / 100));
+      const novosClientesFloor = Math.floor(novosClientes);
+      const cac = novosClientes > 0 ? (totalBruto / novosClientes) : 0;
+
+      const novoMRR = novosClientes * state.ticketMedio;
+      const mrrBaseAtual = state.baseAtualQtd * state.mensalidadeAtual;
+      const mrrTotal = mrrBaseAtual + novoMRR;
+
+      // 2. Update KPI Tiles
+      document.getElementById('lblOrcamento').innerText = formatBRL(totalBruto);
+      document.getElementById('kpiDiario').innerText = formatBRL(gastoDiarioBruto);
+      document.getElementById('kpiDiarioSub').innerText = `${formatBRL(gastoDiarioLiquido)} líquido em leilão`;
+
+      document.getElementById('kpiLeads').innerText = `${totalLeads} leads`;
+      document.getElementById('kpiLeadsSub').innerText = `~${leadsPorDia} conversas/dia`;
+
+      document.getElementById('kpiNovosClientes').innerText = `${novosClientes.toFixed(1)} clientes`;
+      document.getElementById('kpiCAC').innerText = `CAC Médio: ${formatBRL(cac)}`;
+
+      document.getElementById('kpiNovoMRR').innerText = `+ ${formatBRL(novoMRR)}/mês`;
+      document.getElementById('kpiMRRTotal').innerText = `MRR Total: ${formatBRL(mrrTotal)}/mês`;
+
+      // 3. Creatives Rule Algorithm (Meta Best Practices)
+      // Meta rules: Each ad creative needs between R$ 15 and R$ 25/day
+      let qtdCriativos = 1;
+      if (gastoDiarioLiquido < 28) {
+        qtdCriativos = 1;
+      } else if (gastoDiarioLiquido < 50) {
+        qtdCriativos = 2;
+      } else if (gastoDiarioLiquido < 85) {
+        qtdCriativos = 3;
+      } else if (gastoDiarioLiquido < 140) {
+        qtdCriativos = 4;
+      } else if (gastoDiarioLiquido < 220) {
+        qtdCriativos = 6;
+      } else {
+        qtdCriativos = Math.min(10, Math.floor(gastoDiarioLiquido / 25));
+      }
+
+      const orcPorCriativo = gastoDiarioLiquido / qtdCriativos;
+
+      document.getElementById('txtQtdCriativos').innerText = `${qtdCriativos} Criativo${qtdCriativos > 1 ? 's' : ''} Ativo${qtdCriativos > 1 ? 's' : ''}`;
+      
+      // Render Slots
+      const slotsContainer = document.getElementById('slotsGrid');
+      slotsContainer.innerHTML = '';
+
+      for (let i = 1; i <= qtdCriativos; i++) {
+        const slot = document.createElement('div');
+        const isMain = i <= Math.ceil(qtdCriativos * 0.6);
+        slot.className = `slot-card ${isMain ? 'winner' : ''}`;
+        slot.innerHTML = `
+          <div class="slot-title">${isMain ? '🏆 Anúncio Vencedor ' + i : '🧪 Teste Gancho ' + i}</div>
+          <div class="slot-budget">${formatBRL(orcPorCriativo)}/dia</div>
+          <div class="slot-type">${isMain ? 'Validação / Escala' : 'Novo Teste'}</div>
+        `;
+        slotsContainer.appendChild(slot);
+      }
+
+      document.getElementById('creativeVerdictText').innerHTML = `
+        Com <strong>${formatBRL(gastoDiarioBruto)}/dia</strong> (${formatBRL(gastoDiarioLiquido)} líquido), a recomendação validada da Meta é manter <strong>${qtdCriativos} criativo(s) ativo(s)</strong> recebendo em média <strong>${formatBRL(orcPorCriativo)}/dia cada</strong>. Isso impede que os anúncios compitam entre si e garante dados suficientes para o algoritmo otimizar.
+      `;
+
+      // 4. Update Progression Table
+      renderTable(gastoSemanalBruto, novosClientes, mrrBaseAtual);
+
+      lucide.createIcons();
+    }
+
+    function renderTable(gastoSemanalBruto, totalNovosClientes, mrrBaseAtual) {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+
+      const totalSemanas = Math.max(2, Math.round(state.dias / 7));
+      const clientesPorSemana = totalNovosClientes / totalSemanas;
+
+      let clientesAcumulados = state.baseAtualQtd;
+      let totalBolsoDanilo = 0;
+      let saldoAcumulado = (state.baseAtualQtd * state.mensalidadeAtual) - (state.baseAtualQtd * state.custoAprendizPorCliente);
+
+      for (let sem = 1; sem <= totalSemanas; sem++) {
+        const novosDestaSemana = Math.round(clientesPorSemana * sem);
+        const clientesTotais = state.baseAtualQtd + novosDestaSemana;
+        
+        // Faturamento recorrente mensal ativo
+        const faturamentoMensal = (state.baseAtualQtd * state.mensalidadeAtual) + (novosDestaSemana * state.ticketMedio);
+        const custoAprendiz = clientesTotais * state.custoAprendizPorCliente;
+        const receitaDisponivelSemana = (faturamentoMensal / 4);
+
+        let aporteDanilo = 0;
+        if (sem === 1 && mrrBaseAtual < 800) {
+          aporteDanilo = Math.max(0, gastoSemanalBruto - receitaDisponivelSemana);
+          totalBolsoDanilo += aporteDanilo;
+        }
+
+        const saldoSemana = receitaDisponivelSemana - (custoAprendiz / 4) - gastoSemanalBruto;
+        saldoAcumulado += saldoSemana;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>Semana ${sem}</strong></td>
+          <td><span class="tag blue">${clientesTotais} clientes (${novosDestaSemana} novos)</span></td>
+          <td class="mono" style="color: #34d399;">${formatBRL(faturamentoMensal)}/mês</td>
+          <td class="mono" style="color: #60a5fa;">${formatBRL(gastoSemanalBruto)}</td>
+          <td class="mono" style="color: #f87171;">${formatBRL(custoAprendiz)}/mês</td>
+          <td class="mono" style="color: ${aporteDanilo > 0 ? '#fbbf24' : '#94a3b8'};">${aporteDanilo > 0 ? formatBRL(aporteDanilo) : 'R$ 0,00'}</td>
+          <td class="mono" style="font-weight: 700; color: #34d399;">+ ${formatBRL(saldoAcumulado)}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+
+      // Verdict Text for Danilo
+      const daniloBox = document.getElementById('daniloVerdictText');
+      const sobraBase = (state.baseAtualQtd * state.mensalidadeAtual) - (state.baseAtualQtd * state.custoAprendizPorCliente);
+
+      if (sobraBase >= (gastoSemanalBruto * 2)) {
+        daniloBox.innerHTML = `
+          <strong>Veredito para o Danilo:</strong> A Prime Rank tem <strong>R$ ${sobraBase.toFixed(2)} de margem limpa por mês</strong> já garantida pelos clientes atuais. O Danilo <strong>NÃO precisa tirar NENHUM centavo do próprio bolso</strong>. O próprio faturamento dos clientes atuais já banca 100% da mídia!
+        `;
+      } else {
+        const aporteEstimado = Math.max(0, (gastoSemanalBruto * 1.5) - (sobraBase / 2));
+        daniloBox.innerHTML = `
+          <strong>Veredito para o Danilo:</strong> O Danilo entra no máximo com um aporte inicial de <strong>${formatBRL(aporteEstimado)}</strong> para ligar as campanhas. Assim que o 1º novo cliente pagar no Pix (na semana 1 ou 2), esse aporte é devolvido e a agência passa a rodar no piloto automático!
+        `;
+      }
+    }
+
+    // Share plan via WhatsApp
+    function copyWhatsAppPlan() {
+      const totalBruto = state.orcamentoTotal;
+      const gastoDiarioBruto = totalBruto / state.dias;
+      const totalLiquidoMidia = totalBruto / (1 + (state.taxaMeta / 100));
+      const totalLeads = Math.floor(totalLiquidoMidia / state.cpl);
+      const novosClientes = (totalLeads * (state.taxaConv / 100)).toFixed(1);
+      const novoMRR = novosClientes * state.ticketMedio;
+      const totalClientes = Number(state.baseAtualQtd) + Number(novosClientes);
+      const mrrFinal = (state.baseAtualQtd * state.mensalidadeAtual) + novoMRR;
+
+      let qtdCriativos = 1;
+      if (gastoDiarioBruto < 30) qtdCriativos = 1;
+      else if (gastoDiarioBruto < 60) qtdCriativos = 2;
+      else if (gastoDiarioBruto < 100) qtdCriativos = 3;
+      else if (gastoDiarioBruto < 180) qtdCriativos = 4;
+      else qtdCriativos = 6;
+
+      const text = `📊 *PLANEJAMENTO DE TRÁFEGO PRIME RANK*
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+💰 *Investimento Total:* ${formatBRL(totalBruto)} (${state.dias} dias)
+⚡ *Gasto Diário:* ${formatBRL(gastoDiarioBruto)}/dia
+🎨 *Estrutura de Anúncios:* ${qtdCriativos} criativos rodando simultaneamente (~${formatBRL(gastoDiarioBruto / qtdCriativos)}/dia cada)
+
+🎯 *PREVISÃO DE RETORNO:*
+• *Leads no WhatsApp:* ~${totalLeads} leads (CPL R$ ${state.cpl.toFixed(2)})
+• *Novos Clientes Fechados:* ~${novosClientes} contratos (taxa de 6%)
+• *Nova Receita Adicionada (MRR):* + ${formatBRL(novoMRR)}/mês
+• *Receita Total da Agência:* ${formatBRL(mrrFinal)}/mês (${totalClientes.toFixed(0)} clientes ativos)
+
+💡 *POR QUE O INVESTIMENTO SE PAGA?*
+Já temos ${state.baseAtualQtd} clientes pagantes gerando caixa. O Danilo só precisa garantir a largada. Com os primeiros fechamentos via Pix, o tráfego se paga sozinho!`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3500);
+      });
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      recalc();
+    });
+  </script>
+</body>
+</html>
