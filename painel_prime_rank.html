@@ -43,17 +43,14 @@
       background-color: var(--bg-dark);
       color: var(--text-main);
       line-height: 1.6;
-      padding: 24px;
+      padding: 0;
+      margin: 0;
       background-image: 
         radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
         radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
       background-attachment: fixed;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
     }
 
     /* LOGIN SCREEN OVERLAY */
@@ -353,42 +350,314 @@
       border-color: rgba(239, 68, 68, 0.4);
     }
 
-    /* Navigation Tabs */
-    .nav-tabs {
+    /* DASHBOARD WRAPPER & SIDEBAR LAYOUT */
+    .dashboard-wrapper {
       display: flex;
-      gap: 8px;
-      background: rgba(15, 23, 42, 0.6);
-      padding: 6px;
-      border-radius: 12px;
-      border: 1px solid var(--border-card);
-      overflow-x: auto;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
     }
 
-    .nav-tab {
-      padding: 10px 18px;
+    /* SIDEBAR LATERAL ESQUERDA */
+    .sidebar {
+      width: 270px;
+      min-width: 270px;
+      background: rgba(11, 17, 32, 0.96);
+      backdrop-filter: blur(28px);
+      border-right: 1px solid var(--border-card);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      z-index: 1000;
+      transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1), min-width 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 4px 0 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--border-card);
+      gap: 10px;
+      height: 76px;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .sidebar-logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      box-shadow: 0 4px 15px var(--primary-glow);
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand-text {
+      display: flex;
+      flex-direction: column;
+      white-space: nowrap;
+      transition: opacity 0.2s ease;
+    }
+
+    .sidebar-brand-text h2 {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .sidebar-brand-text span {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+    }
+
+    /* BOTÃO SANDUÍCHE */
+    .btn-toggle-sidebar {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-card);
       border-radius: 8px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .btn-toggle-sidebar:hover {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: #3b82f6;
+      color: #60a5fa;
+      transform: scale(1.05);
+    }
+
+    /* NAVIGATION LINKS IN SIDEBAR */
+    .sidebar-nav {
+      padding: 16px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .sidebar-nav .nav-tab {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
       font-size: 13px;
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
-      border: none;
+      border: 1px solid transparent;
       background: transparent;
-      transition: var(--transition);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
+      transition: var(--transition);
+      text-decoration: none;
       white-space: nowrap;
+      position: relative;
+      text-align: left;
     }
 
-    .nav-tab:hover {
+    .sidebar-nav .nav-tab i {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--text-dim);
+      transition: var(--transition);
+    }
+
+    .sidebar-nav .nav-tab:hover {
       color: var(--text-main);
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.08);
+      transform: translateX(3px);
     }
 
-    .nav-tab.active {
-      color: white;
-      background: var(--primary);
-      box-shadow: 0 4px 14px var(--primary-glow);
+    .sidebar-nav .nav-tab:hover i {
+      color: #60a5fa;
+    }
+
+    .sidebar-nav .nav-tab.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(59, 130, 246, 0.15));
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
+    }
+
+    .sidebar-nav .nav-tab.active i {
+      color: #60a5fa;
+    }
+
+    .sidebar-separator {
+      height: 1px;
+      background: var(--border-card);
+      margin: 10px 4px;
+    }
+
+    .sidebar-nav .special-nav-link {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .sidebar-nav .special-nav-link:hover {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border-card);
+    }
+
+    .sidebar-status-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-card);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      flex-shrink: 0;
+    }
+
+    /* ENCOLHIDO / COLLAPSED */
+    .sidebar.collapsed {
+      width: 74px;
+      min-width: 74px;
+    }
+
+    .sidebar.collapsed .sidebar-brand-text,
+    .sidebar.collapsed .nav-label,
+    .sidebar.collapsed .sidebar-status-text {
+      display: none;
+      opacity: 0;
+    }
+
+    .sidebar.collapsed .sidebar-header {
+      justify-content: center;
+      padding: 20px 8px;
+    }
+
+    .sidebar.collapsed .sidebar-brand {
+      display: none;
+    }
+
+    .sidebar.collapsed .btn-toggle-sidebar {
+      margin: 0 auto;
+    }
+
+    .sidebar.collapsed .nav-tab {
+      justify-content: center;
+      padding: 12px 0;
+      gap: 0;
+    }
+
+    .sidebar.collapsed .nav-tab:hover {
+      transform: scale(1.08);
+    }
+
+    .sidebar.collapsed .nav-tab i {
+      width: 20px;
+      height: 20px;
+    }
+
+    .sidebar.collapsed .sidebar-status-box {
+      justify-content: center;
+      padding: 8px;
+    }
+
+    /* CONTEÚDO PRINCIPAL */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      max-width: 1520px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .header-left-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .mobile-hamburger-btn {
+      display: none;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        position: fixed;
+        left: -290px;
+        top: 0;
+        bottom: 0;
+        box-shadow: 10px 0 35px rgba(0, 0, 0, 0.8);
+      }
+
+      .sidebar.mobile-open {
+        transform: translateX(290px);
+      }
+
+      .mobile-hamburger-btn {
+        display: inline-flex;
+      }
+
+      .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        z-index: 950;
+      }
+
+      .sidebar-backdrop.active {
+        display: block;
+      }
+
+      .main-content {
+        padding: 16px;
+      }
     }
 
     /* KPI Grid */
@@ -1258,68 +1527,111 @@
     </div>
   </div>
 
-  <!-- CONTAINER PRINCIPAL DO PAINEL -->
-  <div class="container" id="mainDashboard" style="display: none;">
+  <!-- CONTAINER PRINCIPAL DO PAINEL COM LAYOUT SIDEBAR -->
+  <div class="dashboard-wrapper" id="mainDashboard" style="display: none;">
 
-    <!-- HEADER -->
-    <header>
-      <div class="brand">
-        <div class="brand-logo">
-          <i data-lucide="zap"></i>
+    <!-- BACKDROP PARA TELAS MENORES / MOBILE -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
+
+    <!-- SIDEBAR LATERAL ESQUERDA RECOLHÍVEL -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-logo">
+            <i data-lucide="zap"></i>
+          </div>
+          <div class="sidebar-brand-text">
+            <h2>PRIME RANK</h2>
+            <span>PAINEL EXECUTIVO</span>
+          </div>
         </div>
-        <div class="brand-info">
-          <h1>PRIME RANK — PAINEL ESTRATÉGICO & CRM ATIVO</h1>
-          <p>Dados 100% Editáveis em Tempo Real com Recálculo Automático</p>
-        </div>
-      </div>
-      <div class="header-actions">
-        <button class="btn-action btn-primary-action" onclick="openClientModal()">
-          <i data-lucide="user-plus" style="width: 15px; height: 15px;"></i>
-          Novo Cliente
-        </button>
-        <button class="btn-action" id="btnSyncGithub" onclick="handleSyncGithub()" title="Salvar alterações no repositório GitHub">
-          <i data-lucide="cloud-upload" style="width: 15px; height: 15px; color: #60a5fa;"></i>
-          <span id="lblSyncGithub">Salvar no GitHub</span>
-        </button>
-        <button class="btn-action" onclick="window.print()">
-          <i data-lucide="printer" style="width: 15px; height: 15px;"></i>
-          Imprimir
-        </button>
-        <button class="btn-action" onclick="resetToDefaultData()" title="Restaurar dados originais">
-          <i data-lucide="rotate-ccw" style="width: 15px; height: 15px;"></i>
-          Resetar
-        </button>
-        <button class="btn-action btn-logout" onclick="handleLogout()" title="Bloquear e Sair">
-          <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
-          Bloquear
+        <!-- BOTÃO SANDUÍCHE PARA EXPANDIR / ENCOLHER -->
+        <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" onclick="toggleSidebar()" title="Recolher / Expandir Menu">
+          <i data-lucide="menu" id="sidebarToggleIcon" style="width: 18px; height: 18px;"></i>
         </button>
       </div>
-    </header>
 
-    <!-- NAVIGATION TABS -->
-    <nav class="nav-tabs">
-      <button class="nav-tab active" onclick="switchSection('tab-visao-geral')">
-        <i data-lucide="layout-dashboard" style="width: 16px; height: 16px;"></i> Visão Geral & Métricas
-      </button>
-      <button class="nav-tab" onclick="switchSection('tab-clientes')">
-        <i data-lucide="users" style="width: 16px; height: 16px;"></i> Gestão de Clientes & LTV (Editável)
-      </button>
-      <button class="nav-tab" onclick="switchSection('tab-funil')">
-        <i data-lucide="filter" style="width: 16px; height: 16px;"></i> Funil de Vendas (83 Leads)
-      </button>
-      <button class="nav-tab" onclick="switchSection('tab-copies')">
-        <i data-lucide="message-square" style="width: 16px; height: 16px;"></i> Cópias & Impacto de Links
-      </button>
-      <button class="nav-tab" onclick="switchSection('tab-servicos')">
-        <i data-lucide="briefcase" style="width: 16px; height: 16px;"></i> Matriz de Serviços & Precificação
-      </button>
-      <button class="nav-tab" onclick="switchSection('tab-planejamento')">
-        <i data-lucide="trending-up" style="width: 16px; height: 16px;"></i> Planejador de Ads & ROI
-      </button>
-      <a href="simulador_meta_ads.html" class="nav-tab" style="color: #34d399; text-decoration: none; border: 1px solid rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.08);">
-        <i data-lucide="calculator" style="width: 16px; height: 16px;"></i> Simulador Dinâmico & Criativos 🚀
-      </a>
-    </nav>
+      <!-- MENU DE NAVEGAÇÃO LATERAL -->
+      <nav class="sidebar-nav">
+        <button type="button" class="nav-tab active" data-tab="tab-visao-geral" onclick="switchSection('tab-visao-geral', this)" title="Visão Geral & Métricas">
+          <i data-lucide="layout-dashboard"></i>
+          <span class="nav-label">Visão Geral & Métricas</span>
+        </button>
+        <button type="button" class="nav-tab" data-tab="tab-clientes" onclick="switchSection('tab-clientes', this)" title="Gestão de Clientes & LTV (Editável)">
+          <i data-lucide="users"></i>
+          <span class="nav-label">Gestão de Clientes</span>
+        </button>
+        <button type="button" class="nav-tab" data-tab="tab-funil" onclick="switchSection('tab-funil', this)" title="Funil de Vendas (83 Leads)">
+          <i data-lucide="filter"></i>
+          <span class="nav-label">Funil de Vendas (83)</span>
+        </button>
+        <button type="button" class="nav-tab" data-tab="tab-copies" onclick="switchSection('tab-copies', this)" title="Cópias & Impacto de Links">
+          <i data-lucide="message-square"></i>
+          <span class="nav-label">Cópias & Links</span>
+        </button>
+        <button type="button" class="nav-tab" data-tab="tab-servicos" onclick="switchSection('tab-servicos', this)" title="Matriz de Serviços & Precificação">
+          <i data-lucide="briefcase"></i>
+          <span class="nav-label">Matriz de Serviços</span>
+        </button>
+        <button type="button" class="nav-tab" data-tab="tab-planejamento" onclick="switchSection('tab-planejamento', this)" title="Planejador de Ads & ROI">
+          <i data-lucide="trending-up"></i>
+          <span class="nav-label">Planejador de Ads</span>
+        </button>
+
+        <div class="sidebar-separator"></div>
+
+        <a href="simulador_meta_ads.html" class="nav-tab special-nav-link" title="Novo Simulador Dinâmico de Tráfego">
+          <i data-lucide="calculator" style="color: #34d399;"></i>
+          <span class="nav-label" style="color: #34d399; font-weight: 700;">Simulador Ads 🚀</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-status-box">
+          <span class="status-indicator"></span>
+          <span class="sidebar-status-text">Operação Ativa</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL (LADO DIREITO) -->
+    <main class="main-content">
+
+      <!-- HEADER DO TOPO -->
+      <header>
+        <div class="header-left-wrap">
+          <!-- BOTÃO SANDUÍCHE NO HEADER (FACILITA AINDA MAIS) -->
+          <button type="button" class="btn-action mobile-hamburger-btn" onclick="toggleSidebar()" title="Menu Lateral">
+            <i data-lucide="menu" style="width: 18px; height: 18px;"></i>
+          </button>
+          <div class="brand-info">
+            <h1>PRIME RANK — PAINEL ESTRATÉGICO & CRM ATIVO</h1>
+            <p>Dados 100% Editáveis em Tempo Real com Recálculo Automático</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="btn-action btn-primary-action" onclick="openClientModal()">
+            <i data-lucide="user-plus" style="width: 15px; height: 15px;"></i>
+            Novo Cliente
+          </button>
+          <button class="btn-action" id="btnSyncGithub" onclick="handleSyncGithub()" title="Salvar alterações no repositório GitHub">
+            <i data-lucide="cloud-upload" style="width: 15px; height: 15px; color: #60a5fa;"></i>
+            <span id="lblSyncGithub">Salvar no GitHub</span>
+          </button>
+          <button class="btn-action" onclick="window.print()">
+            <i data-lucide="printer" style="width: 15px; height: 15px;"></i>
+            Imprimir
+          </button>
+          <button class="btn-action" onclick="resetToDefaultData()" title="Restaurar dados originais">
+            <i data-lucide="rotate-ccw" style="width: 15px; height: 15px;"></i>
+            Resetar
+          </button>
+          <button class="btn-action btn-logout" onclick="handleLogout()" title="Bloquear e Sair">
+            <i data-lucide="log-out" style="width: 15px; height: 15px;"></i>
+            Bloquear
+          </button>
+        </div>
+      </header>
 
     <!-- KPI CARDS (REATIVOS) -->
     <div class="kpi-grid">
@@ -1985,7 +2297,7 @@
         </div>
       </div>
     </div>
-
+    </main>
   </div>
 
   <!-- MODAL DE CADASTRO / EDIÇÃO DE CLIENTE -->
@@ -3206,12 +3518,58 @@
       }
     }
 
-    function switchSection(tabId) {
+    // ==========================================
+    // SIDEBAR TOGGLE & EXPANSÃO (BOTÃO SANDUÍCHE)
+    // ==========================================
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      const isMobile = window.innerWidth <= 1024;
+
+      if (!sidebar) return;
+
+      if (isMobile) {
+        sidebar.classList.toggle('mobile-open');
+        if (backdrop) backdrop.classList.toggle('active');
+      } else {
+        sidebar.classList.toggle('collapsed');
+        const isCollapsed = sidebar.classList.contains('collapsed');
+        localStorage.setItem('pr_sidebar_state', isCollapsed ? 'collapsed' : 'expanded');
+      }
+
+      lucide.createIcons();
+    }
+
+    function initSidebar() {
+      const savedState = localStorage.getItem('pr_sidebar_state');
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar && savedState === 'collapsed' && window.innerWidth > 1024) {
+        sidebar.classList.add('collapsed');
+      }
+    }
+
+    function switchSection(tabId, btnElement = null) {
       document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.sidebar-nav .nav-tab').forEach(btn => btn.classList.remove('active'));
       
-      document.getElementById(tabId).style.display = 'block';
-      event.currentTarget.classList.add('active');
+      const targetTab = document.getElementById(tabId);
+      if (targetTab) targetTab.style.display = 'block';
+
+      if (btnElement) {
+        btnElement.classList.add('active');
+      } else {
+        const btn = document.querySelector(`.sidebar-nav .nav-tab[data-tab="${tabId}"]`);
+        if (btn) btn.classList.add('active');
+      }
+
+      // No mobile, fecha a sidebar ao selecionar uma aba
+      if (window.innerWidth <= 1024) {
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        if (sidebar) sidebar.classList.remove('mobile-open');
+        if (backdrop) backdrop.classList.remove('active');
+      }
+
       if (tabId === 'tab-servicos') {
         renderServices();
       }
@@ -3221,6 +3579,7 @@
     // Checagem de Sessão inicial
     window.addEventListener('DOMContentLoaded', async () => {
       lucide.createIcons();
+      initSidebar();
       loadServices();
       if (sessionStorage.getItem('pr_auth_token')) {
         document.getElementById('loginOverlay').style.display = 'none';
