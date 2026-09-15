@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirecionando... | Prime Rank Performance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --border-card: rgba(255, 255, 255, 0.08);
+      --primary: #3b82f6;
+      --whatsapp: #25d366;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.18) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .redirect-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 36px 28px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .redirect-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #3b82f6, #10b981, #3b82f6);
+      background-size: 200% 100%;
+      animation: gradientMove 2s linear infinite;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+
+    .logo-badge {
+      width: 58px;
+      height: 58px;
+      background: linear-gradient(135deg, #2563eb, #10b981);
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .campaign-name {
+      color: #60a5fa;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 18px;
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 99px;
+    }
+
+    p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .loader-wrap {
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid #25d366;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .btn-wa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-wa:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(37, 211, 102, 0.4);
+    }
+
+    .sim-box {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-card);
+      text-align: left;
+    }
+
+    .sim-box h4 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sim-inputs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .sim-inputs input {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid #334155;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .sim-inputs input:focus {
+      border-color: #3b82f6;
+    }
+
+    .btn-sim {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .btn-sim:hover {
+      background: rgba(59, 130, 246, 0.3);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      color: #64748b;
+      font-size: 12px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="redirect-card">
+    <div class="logo-badge">
+      <i data-lucide="zap" style="width: 32px; height: 32px; color: white;"></i>
+    </div>
+
+    <h1>Redirecionando para o WhatsApp</h1>
+    <div class="campaign-name" id="dispCampaign">Carregando Campanha...</div>
+
+    <p>Você está sendo encaminhado para o atendimento executivo oficial da <strong>Prime Rank</strong> no WhatsApp.</p>
+
+    <div class="loader-wrap">
+      <div class="spinner"></div>
+      <span style="font-size: 13px; color: #94a3b8;" id="countdownMsg">Redirecionando em 2 segundos...</span>
+    </div>
+
+    <a href="#" id="btnGoWa" class="btn-wa">
+      <i data-lucide="message-circle" style="width: 20px; height: 20px;"></i>
+      Iniciar Conversa Agora
+    </a>
+
+    <!-- FERRAMENTA DE SIMULAÇÃO PARA TESTE RÁPIDO DO SÓCIO -->
+    <div class="sim-box">
+      <h4><i data-lucide="flask-conical" style="width: 14px; height: 14px; color: #60a5fa;"></i> Simular Entrada de Lead (Teste Rápido)</h4>
+      <p style="font-size: 12px; margin-bottom: 10px; color: #64748b;">
+        Quer simular que um lead clicou e registrou seu número neste criativo? Digite o WhatsApp abaixo:
+      </p>
+      <div class="sim-inputs">
+        <input type="text" id="simPhone" placeholder="Ex: (81) 98765-4321" value="(81) 99887-1122" />
+        <button type="button" class="btn-sim" onclick="simulateLeadRegister()">
+          Registrar no Painel
+        </button>
+      </div>
+      <div id="simFeedback" style="display: none; margin-top: 8px; font-size: 11px; color: #34d399; font-weight: 700;">
+        ✓ Número registrado no painel com a tag "Conversas"!
+      </div>
+    </div>
+
+    <a href="index.html" class="back-link">
+      <i data-lucide="arrow-left" style="width: 13px; height: 13px;"></i>
+      Voltar para o Painel Prime Rank
+    </a>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('c') || 'cr1-reels';
+
+    let trackingData = [];
+    try {
+      const saved = localStorage.getItem('prime_rank_tracking_links');
+      if (saved) trackingData = JSON.parse(saved);
+    } catch(e) {}
+
+    const link = trackingData.find(x => x.shortCode === code || x.id === code);
+
+    const campaignTitle = link ? link.nome : 'Campanha de Tráfego Prime Rank';
+    const destinationWa = link ? (link.destinoWhatsapp || '5581983305393') : '5581983305393';
+    const message = link ? (link.msgPadrao || 'Olá! Vi o anúncio da Prime Rank e quero acelerar minhas vendas com tráfego.') : 'Olá! Vi o anúncio da Prime Rank e quero acelerar minhas vendas com tráfego.';
+
+    document.getElementById('dispCampaign').innerText = campaignTitle;
+
+    const cleanDest = destinationWa.replace(/\D/g, '');
+    const waUrl = `https://wa.me/${cleanDest.startsWith('55') ? cleanDest : '55' + cleanDest}?text=${encodeURIComponent(message)}`;
+
+    const btnGoWa = document.getElementById('btnGoWa');
+    btnGoWa.href = waUrl;
+
+    // Countdown de 3 segundos para dar tempo de testar a simulação ou abrir
+    let secondsLeft = 3;
+    const countdownEl = document.getElementById('countdownMsg');
+
+    const interval = setInterval(() => {
+      secondsLeft--;
+      if (secondsLeft > 0) {
+        countdownEl.innerText = `Redirecionando em ${secondsLeft} segundo${secondsLeft > 1 ? 's' : ''}...`;
+      } else {
+        clearInterval(interval);
+        countdownEl.innerText = 'Redirecionando agora...';
+        // Se não for teste local de simulação, redireciona:
+        if (!window.location.search.includes('nosim=1') && !sessionStorage.getItem('pause_redirect')) {
+          window.location.href = waUrl;
+        }
+      }
+    }, 1000);
+
+    function simulateLeadRegister() {
+      sessionStorage.setItem('pause_redirect', 'true');
+      clearInterval(interval);
+      countdownEl.innerText = 'Redirecionamento pausado para teste de simulação.';
+
+      const phone = document.getElementById('simPhone').value.trim();
+      if (!phone) return;
+
+      if (link) {
+        if (!link.leads) link.leads = [];
+        const now = new Date();
+        const dataStr = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        link.leads.unshift({
+          id: 'ld_' + Date.now(),
+          numero: phone,
+          data: dataStr,
+          fase: 'conversas'
+        });
+        localStorage.setItem('prime_rank_tracking_links', JSON.stringify(trackingData));
+        document.getElementById('simFeedback').style.display = 'block';
+      } else {
+        alert('Criativo não encontrado no armazenamento local. Abra o painel index.html primeiro.');
+      }
+    }
+  </script>
+</body>
+</html>

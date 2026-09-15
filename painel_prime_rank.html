@@ -1263,6 +1263,41 @@
       to { transform: translateY(0); opacity: 1; }
     }
 
+    /* ESTILOS DE TRACKEAMENTO E FUNIL DE LEADS */
+    .stage-select-box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #f1f5f9;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 5px 8px;
+      cursor: pointer;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .stage-select-box:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+    .link-row-active {
+      background: rgba(59, 130, 246, 0.08) !important;
+      border-left: 3px solid #3b82f6;
+    }
+    .clickable-link-name {
+      cursor: pointer;
+      color: #60a5fa;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .clickable-link-name:hover {
+      color: #93c5fd;
+      text-decoration: underline;
+    }
+
     
     /* ===================================================
        RESPONSIVIDADE MOBILE COMPLETA (SMARTPHONES & TABLETS)
@@ -1576,6 +1611,10 @@
         <button type="button" class="nav-tab" data-tab="tab-planejamento" onclick="switchSection('tab-planejamento', this)" title="Planejador de Ads & ROI">
           <i data-lucide="trending-up"></i>
           <span class="nav-label">Planejador de Ads</span>
+        </button>
+        <button type="button" class="nav-tab" data-tab="tab-trackeamento" onclick="switchSection('tab-trackeamento', this)" title="Trackeamento de Criativos & Funil de Leads">
+          <i data-lucide="link-2"></i>
+          <span class="nav-label">Trackeamento</span>
         </button>
 
         <div class="sidebar-separator"></div>
@@ -2297,6 +2336,122 @@
         </div>
       </div>
     </div>
+
+    <!-- ABA: TRACKEAMENTO DE CRIATIVOS & FUNIL DE LEADS -->
+    <div id="tab-trackeamento" class="tab-content" style="display: none;">
+      
+      <!-- CARD SUPERIOR: AÇÕES E RESUMO DO FUNIL GERAL -->
+      <div class="section-card" style="margin-bottom: 24px;">
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+          <div class="section-title-wrap">
+            <h2><i data-lucide="link-2" style="width: 22px; height: 22px; color: #60a5fa;"></i> Trackeamento de Criativos & Leads de Anúncios</h2>
+            <p>Gere links curtos para seus criativos, rastreie contatos de WhatsApp e acompanhe a evolução pelas fases do funil</p>
+          </div>
+          <button type="button" class="btn-action btn-primary-action" onclick="openModalGerarLink()" style="font-size: 13px; padding: 10px 20px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);">
+            <i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> Gerar Link
+          </button>
+        </div>
+
+        <!-- TOTALIZADORES GERAIS DAS 5 FASES DO FUNIL -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-top: 20px;">
+          <div class="kpi-card" style="border-left: 3px solid #3b82f6; padding: 14px;">
+            <div style="font-size: 11px; font-weight: 700; color: #60a5fa; text-transform: uppercase;">1. Conversas</div>
+            <div style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 4px;" id="totFaseConversas">0</div>
+            <div style="font-size: 11px; color: #94a3b8;">Primeiro contato iniciado</div>
+          </div>
+          <div class="kpi-card" style="border-left: 3px solid #a855f7; padding: 14px;">
+            <div style="font-size: 11px; font-weight: 700; color: #c084fc; text-transform: uppercase;">2. Diagnóstico</div>
+            <div style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 4px;" id="totFaseDiagnostico">0</div>
+            <div style="font-size: 11px; color: #94a3b8;">Qualificação & dores</div>
+          </div>
+          <div class="kpi-card" style="border-left: 3px solid #f59e0b; padding: 14px;">
+            <div style="font-size: 11px; font-weight: 700; color: #fbbf24; text-transform: uppercase;">3. Oferta de Serviço</div>
+            <div style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 4px;" id="totFaseOferta">0</div>
+            <div style="font-size: 11px; color: #94a3b8;">Valores apresentados</div>
+          </div>
+          <div class="kpi-card" style="border-left: 3px solid #f97316; padding: 14px;">
+            <div style="font-size: 11px; font-weight: 700; color: #fb923c; text-transform: uppercase;">4. Negociação</div>
+            <div style="font-size: 24px; font-weight: 800; color: #fff; margin-top: 4px;" id="totFaseNegociacao">0</div>
+            <div style="font-size: 11px; color: #94a3b8;">Quebra de objeções</div>
+          </div>
+          <div class="kpi-card" style="border-left: 3px solid #10b981; padding: 14px; background: rgba(16, 185, 129, 0.06);">
+            <div style="font-size: 11px; font-weight: 700; color: #34d399; text-transform: uppercase;">5. Conversão</div>
+            <div style="font-size: 24px; font-weight: 800; color: #34d399; margin-top: 4px;" id="totFaseConversao">0</div>
+            <div style="font-size: 11px; color: #94a3b8;">Contrato fechado & Pix</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABELA DE LINKS COM AS COLUNAS SOLICITADAS: CONVERSAS, DIAGNOSTICO, OFERTA, NEGOCIAÇÃO, CONVERSÃO -->
+      <div class="section-card">
+        <div class="section-header" style="margin-bottom: 16px;">
+          <div class="section-title-wrap">
+            <h3><i data-lucide="bar-chart-2" style="width: 18px; height: 18px; color: #60a5fa;"></i> Métricas por Link de Anúncio (Fases do Funil)</h3>
+            <p>Clique sobre o <strong>Nome do Link</strong> para abrir a lista de números e preencher cadastro dos clientes</p>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome do Criativo / Link</th>
+                <th>Link Curto</th>
+                <th style="text-align: center;">Total Leads</th>
+                <th style="text-align: center; color: #60a5fa;">Conversas</th>
+                <th style="text-align: center; color: #c084fc;">Diagnóstico</th>
+                <th style="text-align: center; color: #fbbf24;">Oferta de Serviço</th>
+                <th style="text-align: center; color: #fb923c;">Negociação</th>
+                <th style="text-align: center; color: #34d399;">Conversão</th>
+                <th style="text-align: center;">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyTrackingLinks">
+              <!-- Renderizado via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ÁREA EXPANDIDA: LISTA DE CONTATOS DO LINK SELECIONADO -->
+      <div class="section-card" id="cardContatosDoLink" style="margin-top: 24px; display: none;">
+        <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div class="section-title-wrap">
+            <h3 style="display: flex; align-items: center; gap: 8px;">
+              <i data-lucide="phone-call" style="width: 18px; height: 18px; color: #34d399;"></i>
+              Contatos do Link: <span id="lblNomeLinkSelecionado" style="color: #60a5fa; font-weight: 800;"></span>
+            </h3>
+            <p>Altere a tag conforme o lead evolui no funil ou clique em <strong>Preencher Cadastro</strong> para cadastrar como cliente oficial</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button type="button" class="btn-action" onclick="openAddLeadModal()" style="font-size: 12px; padding: 7px 14px;">
+              <i data-lucide="user-plus" style="width: 14px; height: 14px;"></i> + Adicionar Contato
+            </button>
+            <button type="button" class="btn-action" onclick="fecharCardContatos()" style="font-size: 12px; padding: 7px 14px;">
+              <i data-lucide="x" style="width: 14px; height: 14px;"></i> Fechar Lista
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive" style="margin-top: 14px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Número / WhatsApp</th>
+                <th>Data / Hora Entrada</th>
+                <th>Fase do Funil (Tag Atual)</th>
+                <th style="text-align: center;">Ação de Cadastro</th>
+                <th style="text-align: center;">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyContatosLink">
+              <!-- Renderizado via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
     </main>
   </div>
 
@@ -2379,6 +2534,13 @@
         </div>
 
         <div class="input-field" style="margin-top: 12px;">
+          <label>WhatsApp / Telefone do Lead</label>
+          <div class="input-wrapper">
+            <input type="text" id="mTelefone" placeholder="Ex: (81) 98330-5393" />
+          </div>
+        </div>
+
+        <div class="input-field" style="margin-top: 12px;">
           <label>Período / Datas</label>
           <div class="input-wrapper">
             <input type="text" id="mPeriodo" placeholder="Ex: 15/09/26 ➔ Ativo" />
@@ -2452,6 +2614,93 @@
           <button type="submit" class="btn-action btn-primary-action">
             <i data-lucide="check" style="width: 15px; height: 15px;"></i>
             Salvar Serviço
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: GERAR NOVO LINK DE TRACKEAMENTO -->
+  <div class="modal-backdrop" id="modalGerarLink" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i data-lucide="link" style="width: 20px; height: 20px; color: #60a5fa;"></i> Gerar Link de Trackeamento</h3>
+        <button class="modal-close" onclick="closeModalGerarLink()">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <form id="formGerarLink" onsubmit="salvarNovoLink(event)">
+        <div class="input-field">
+          <label>Nome do Criativo / Campanha *</label>
+          <div class="input-wrapper">
+            <input type="text" id="tNomeCriativo" placeholder="Ex: Criativo 01 - Vídeo Depoimento" required />
+          </div>
+        </div>
+
+        <div class="input-field" style="margin-top: 12px;">
+          <label>WhatsApp de Destino (com DDI e DDD) *</label>
+          <div class="input-wrapper">
+            <input type="text" id="tDestinoWhatsapp" placeholder="Ex: 5581983305393" value="5581983305393" required />
+          </div>
+        </div>
+
+        <div class="input-field" style="margin-top: 12px;">
+          <label>Mensagem Padrão que o Lead enviará no WhatsApp</label>
+          <div class="input-wrapper">
+            <input type="text" id="tMsgPadrao" placeholder="Ex: Olá, vi o anúncio e quero escalar meu negócio!" value="Olá! Vi o anúncio da Prime Rank e quero acelerar minhas vendas com tráfego." />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-action" onclick="closeModalGerarLink()">Cancelar</button>
+          <button type="submit" class="btn-action btn-primary-action">
+            <i data-lucide="check" style="width: 15px; height: 15px;"></i>
+            Salvar e Gerar Link Curto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADICIONAR CONTATO / LEAD AO LINK -->
+  <div class="modal-backdrop" id="modalAddLead" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i data-lucide="user-plus" style="width: 20px; height: 20px; color: #60a5fa;"></i> Adicionar Contato ao Link</h3>
+        <button class="modal-close" onclick="closeAddLeadModal()">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <form id="formAddLead" onsubmit="salvarNovoLead(event)">
+        <input type="hidden" id="leadLinkId" />
+
+        <div class="input-field">
+          <label>Número de WhatsApp do Lead *</label>
+          <div class="input-wrapper">
+            <input type="text" id="leadNumero" placeholder="Ex: (81) 98765-4321" required />
+          </div>
+        </div>
+
+        <div class="input-field" style="margin-top: 12px;">
+          <label>Fase Inicial no Funil *</label>
+          <div class="input-wrapper">
+            <select id="leadFase" required>
+              <option value="conversas">Conversas (Iniciou contato)</option>
+              <option value="diagnostico">Diagnóstico (Qualificação do negócio)</option>
+              <option value="oferta_servico">Oferta de Serviço (Proposta comercial)</option>
+              <option value="negociacao">Negociação (Alinhando termos/objeções)</option>
+              <option value="conversao">Conversão (Contrato fechado e pago!)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-action" onclick="closeAddLeadModal()">Cancelar</button>
+          <button type="submit" class="btn-action btn-primary-action">
+            <i data-lucide="check" style="width: 15px; height: 15px;"></i>
+            Salvar Contato
           </button>
         </div>
       </form>
@@ -3067,7 +3316,7 @@
     }
 
     // MODAL DE CLIENTES (ADICIONAR / EDITAR)
-    function openClientModal(clientId = null) {
+    function openClientModal(clientId = null, initialData = null) {
       const modal = document.getElementById('clientModal');
       const title = document.getElementById('modalTitle');
       const form = document.getElementById('clientForm');
@@ -3087,12 +3336,19 @@
           document.getElementById('mMesesPagos').value = c.mesesPagos;
           document.getElementById('mCustoAprendiz').value = c.custoAprendizMensal || 0;
           document.getElementById('mSetupExtra').value = c.setupExtra || 0;
+          document.getElementById('mTelefone').value = c.telefone || '';
           document.getElementById('mPeriodo').value = c.periodo || '';
           document.getElementById('mServicos').value = c.servicos || '';
         }
       } else {
         title.innerHTML = '<i data-lucide="user-plus" style="width: 20px; height: 20px; color: #60a5fa;"></i> Novo Cliente';
         document.getElementById('clientId').value = '';
+        if (initialData) {
+          if (initialData.telefone) document.getElementById('mTelefone').value = initialData.telefone;
+          if (initialData.origem) document.getElementById('mOrigem').value = initialData.origem;
+          if (initialData.servicos) document.getElementById('mServicos').value = initialData.servicos;
+          if (initialData.status) document.getElementById('mStatus').value = initialData.status;
+        }
       }
 
       modal.style.display = 'flex';
@@ -3114,6 +3370,7 @@
       const mesesPagos = parseInt(document.getElementById('mMesesPagos').value) || 0;
       const custoAprendizMensal = parseFloat(document.getElementById('mCustoAprendiz').value) || 0;
       const setupExtra = parseFloat(document.getElementById('mSetupExtra').value) || 0;
+      const telefone = document.getElementById('mTelefone').value.trim();
       const periodo = document.getElementById('mPeriodo').value.trim();
       const servicos = document.getElementById('mServicos').value.trim();
 
@@ -3123,7 +3380,7 @@
         if (idx !== -1) {
           clientsData[idx] = {
             ...clientsData[idx],
-            nome, nicho, origem, status, mensalidade, mesesPagos, custoAprendizMensal, setupExtra, periodo, servicos
+            nome, nicho, origem, status, mensalidade, mesesPagos, custoAprendizMensal, setupExtra, telefone, periodo, servicos
           };
           // Remove override if present
           delete clientsData[idx].overrideTotalBruto;
@@ -3134,7 +3391,7 @@
         const initials = nome.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
         clientsData.unshift({
           id: newId,
-          nome, nicho, origem, status, mensalidade, mesesPagos, custoAprendizMensal, setupExtra, periodo, servicos,
+          nome, nicho, origem, status, mensalidade, mesesPagos, custoAprendizMensal, setupExtra, telefone, periodo, servicos,
           avatar: initials,
           avatarGrad: 'linear-gradient(135deg, #3b82f6, #8b5cf6)'
         });
@@ -3519,6 +3776,440 @@
     }
 
     // ==========================================
+    // TRACKEAMENTO DE LINKS, CRIATIVOS & FUNIL DE LEADS
+    // ==========================================
+    const defaultTrackingLinks = [
+      {
+        id: 'trk_1',
+        nome: 'Criativo 01 - Vídeo Reels (Dores do Varejo)',
+        destinoWhatsapp: '5581983305393',
+        msgPadrao: 'Olá! Vi o anúncio em vídeo sobre escala no varejo e gostaria de um diagnóstico comercial.',
+        shortCode: 'cr1-reels',
+        shortUrl: 'r.html?c=cr1-reels',
+        criadoEm: '10/09/2026',
+        leads: [
+          { id: 'ld_101', numero: '(81) 98330-5393', data: '10/09/2026 10:15', fase: 'conversao' },
+          { id: 'ld_102', numero: '(81) 99124-8842', data: '11/09/2026 14:30', fase: 'negociacao' },
+          { id: 'ld_103', numero: '(87) 99611-3040', data: '12/09/2026 09:22', fase: 'oferta_servico' },
+          { id: 'ld_104', numero: '(11) 97542-1920', data: '13/09/2026 16:45', fase: 'diagnostico' },
+          { id: 'ld_105', numero: '(81) 98822-4411', data: '14/09/2026 11:05', fase: 'conversas' }
+        ]
+      },
+      {
+        id: 'trk_2',
+        nome: 'Criativo 02 - Carrossel Métricas & ROI 9.8x',
+        destinoWhatsapp: '5581983305393',
+        msgPadrao: 'Vi o carrossel da Prime Rank de 9.8x ROI e quero saber quanto custa para minha empresa.',
+        shortCode: 'cr2-roi',
+        shortUrl: 'r.html?c=cr2-roi',
+        criadoEm: '12/09/2026',
+        leads: [
+          { id: 'ld_201', numero: '(81) 98712-9900', data: '12/09/2026 18:20', fase: 'conversao' },
+          { id: 'ld_202', numero: '(81) 99432-1100', data: '13/09/2026 15:10', fase: 'oferta_servico' },
+          { id: 'ld_203', numero: '(81) 98211-7788', data: '14/09/2026 08:40', fase: 'diagnostico' },
+          { id: 'ld_204', numero: '(81) 99765-4321', data: '14/09/2026 13:55', fase: 'conversas' }
+        ]
+      },
+      {
+        id: 'trk_3',
+        nome: 'Criativo 03 - Estudo de Caso Betânia & Concept',
+        destinoWhatsapp: '5581983305393',
+        msgPadrao: 'Olá! Acompanho os casos de sucesso da Betânia e Concept, quero uma proposta de tráfego.',
+        shortCode: 'cr3-cases',
+        shortUrl: 'r.html?c=cr3-cases',
+        criadoEm: '13/09/2026',
+        leads: [
+          { id: 'ld_301', numero: '(81) 98899-2233', data: '13/09/2026 19:00', fase: 'negociacao' },
+          { id: 'ld_302', numero: '(81) 99555-4422', data: '14/09/2026 17:30', fase: 'conversas' }
+        ]
+      }
+    ];
+
+    let trackingLinksData = [];
+    let linkSelecionadoId = null;
+
+    function loadTrackingLinks() {
+      const saved = localStorage.getItem('prime_rank_tracking_links');
+      if (saved) {
+        try {
+          trackingLinksData = JSON.parse(saved);
+        } catch(e) {
+          trackingLinksData = [...defaultTrackingLinks];
+        }
+      } else {
+        trackingLinksData = [...defaultTrackingLinks];
+        saveTrackingStorage();
+      }
+      renderTrackingTable();
+    }
+
+    function saveTrackingStorage() {
+      localStorage.setItem('prime_rank_tracking_links', JSON.stringify(trackingLinksData));
+    }
+
+    const stageConfig = {
+      conversas: { label: '1. Conversas', color: '#60a5fa', border: 'rgba(59, 130, 246, 0.4)' },
+      diagnostico: { label: '2. Diagnóstico', color: '#c084fc', border: 'rgba(168, 85, 247, 0.4)' },
+      oferta_servico: { label: '3. Oferta de Serviço', color: '#fbbf24', border: 'rgba(245, 158, 11, 0.4)' },
+      negociacao: { label: '4. Negociação', color: '#fb923c', border: 'rgba(249, 115, 22, 0.4)' },
+      conversao: { label: '5. Conversão', color: '#34d399', border: 'rgba(16, 185, 129, 0.5)' }
+    };
+
+    function renderTrackingTable() {
+      const tbody = document.getElementById('tbodyTrackingLinks');
+      if (!tbody) return;
+
+      let totConversas = 0;
+      let totDiagnostico = 0;
+      let totOferta = 0;
+      let totNegociacao = 0;
+      let totConversao = 0;
+
+      if (trackingLinksData.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #64748b; padding: 30px;">Nenhum link de anúncio gerado ainda. Clique em "Gerar Link" acima para criar o seu primeiro!</td></tr>`;
+      } else {
+        tbody.innerHTML = trackingLinksData.map(link => {
+          const leads = link.leads || [];
+          const cConversas = leads.filter(l => l.fase === 'conversas').length;
+          const cDiagnostico = leads.filter(l => l.fase === 'diagnostico').length;
+          const cOferta = leads.filter(l => l.fase === 'oferta_servico').length;
+          const cNegociacao = leads.filter(l => l.fase === 'negociacao').length;
+          const cConversao = leads.filter(l => l.fase === 'conversao').length;
+          const totalLeads = leads.length;
+
+          totConversas += cConversas;
+          totDiagnostico += cDiagnostico;
+          totOferta += cOferta;
+          totNegociacao += cNegociacao;
+          totConversao += cConversao;
+
+          const isSelected = link.id === linkSelecionadoId;
+          const currentUrlDir = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+          const fullShortUrl = currentUrlDir + link.shortUrl;
+
+          return `
+            <tr class="${isSelected ? 'link-row-active' : ''}">
+              <td>
+                <div class="clickable-link-name" onclick="mostrarContatosLink('${link.id}')" title="Clique para abrir a lista de números">
+                  <i data-lucide="link" style="width: 14px; height: 14px; color: #60a5fa;"></i>
+                  <span>${link.nome}</span>
+                </div>
+                <div style="font-size: 11px; color: #64748b; margin-top: 3px;">Criado em: ${link.criadoEm || 'Recente'} • Destino: ${link.destinoWhatsapp || '5581983305393'}</div>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <code style="background: rgba(15, 23, 42, 0.8); border: 1px solid #334155; padding: 3px 6px; border-radius: 4px; font-size: 11px; color: #93c5fd;">${link.shortUrl}</code>
+                  <button type="button" class="btn-icon" onclick="copyShortLink('${fullShortUrl}')" title="Copiar Link para Anúncios" style="width: 26px; height: 26px;">
+                    <i data-lucide="copy" style="width: 13px; height: 13px;"></i>
+                  </button>
+                  <a href="${link.shortUrl}" target="_blank" class="btn-icon" title="Testar Redirecionamento de WhatsApp" style="width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; color: #34d399;">
+                    <i data-lucide="external-link" style="width: 13px; height: 13px;"></i>
+                  </a>
+                </div>
+              </td>
+              <td style="text-align: center; font-weight: 800; color: #f8fafc;">${totalLeads}</td>
+              <td style="text-align: center; font-weight: 700; color: #60a5fa;">
+                <span style="background: rgba(59, 130, 246, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(59, 130, 246, 0.2);">${cConversas}</span>
+              </td>
+              <td style="text-align: center; font-weight: 700; color: #c084fc;">
+                <span style="background: rgba(168, 85, 247, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(168, 85, 247, 0.2);">${cDiagnostico}</span>
+              </td>
+              <td style="text-align: center; font-weight: 700; color: #fbbf24;">
+                <span style="background: rgba(245, 158, 11, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(245, 158, 11, 0.2);">${cOferta}</span>
+              </td>
+              <td style="text-align: center; font-weight: 700; color: #fb923c;">
+                <span style="background: rgba(249, 115, 22, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(249, 115, 22, 0.2);">${cNegociacao}</span>
+              </td>
+              <td style="text-align: center; font-weight: 800; color: #34d399;">
+                <span style="background: rgba(16, 185, 129, 0.15); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.3);">${cConversao}</span>
+              </td>
+              <td style="text-align: center;">
+                <div class="table-actions" style="justify-content: center; gap: 6px;">
+                  <button type="button" class="btn-action" onclick="mostrarContatosLink('${link.id}')" title="Ver Lista de Contatos" style="font-size: 11px; padding: 4px 8px;">
+                    <i data-lucide="users" style="width: 13px; height: 13px;"></i> Ver Contatos (${totalLeads})
+                  </button>
+                  <button type="button" class="btn-icon" onclick="openAddLeadModal('${link.id}')" title="Adicionar Contato Manualmente" style="width: 26px; height: 26px; color: #60a5fa;">
+                    <i data-lucide="user-plus" style="width: 13px; height: 13px;"></i>
+                  </button>
+                  <button type="button" class="btn-icon delete" onclick="excluirTrackingLink('${link.id}')" title="Excluir Link" style="width: 26px; height: 26px;">
+                    <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Atualiza os cards superiores das 5 fases
+      const elConv = document.getElementById('totFaseConversas');
+      const elDiag = document.getElementById('totFaseDiagnostico');
+      const elOfer = document.getElementById('totFaseOferta');
+      const elNego = document.getElementById('totFaseNegociacao');
+      const elFech = document.getElementById('totFaseConversao');
+
+      if (elConv) elConv.innerText = totConversas;
+      if (elDiag) elDiag.innerText = totDiagnostico;
+      if (elOfer) elOfer.innerText = totOferta;
+      if (elNego) elNego.innerText = totNegociacao;
+      if (elFech) elFech.innerText = totConversao;
+
+      if (linkSelecionadoId) {
+        renderContatosDoLink(linkSelecionadoId);
+      }
+
+      lucide.createIcons();
+    }
+
+    function openModalGerarLink() {
+      const modal = document.getElementById('modalGerarLink');
+      const form = document.getElementById('formGerarLink');
+      form.reset();
+      document.getElementById('tDestinoWhatsapp').value = '5581983305393';
+      document.getElementById('tMsgPadrao').value = 'Olá! Vi o anúncio da Prime Rank e quero acelerar minhas vendas com tráfego.';
+      modal.style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    function closeModalGerarLink() {
+      document.getElementById('modalGerarLink').style.display = 'none';
+    }
+
+    function salvarNovoLink(e) {
+      e.preventDefault();
+      const nome = document.getElementById('tNomeCriativo').value.trim();
+      const destinoWhatsapp = document.getElementById('tDestinoWhatsapp').value.trim() || '5581983305393';
+      const msgPadrao = document.getElementById('tMsgPadrao').value.trim();
+
+      const shortSlug = 'c' + (trackingLinksData.length + 1) + '-' + Math.random().toString(36).substring(2, 6);
+      const newId = 'trk_' + Date.now();
+      const now = new Date();
+      const criadoEm = now.toLocaleDateString('pt-BR');
+
+      const novoLink = {
+        id: newId,
+        nome: nome,
+        destinoWhatsapp: destinoWhatsapp,
+        msgPadrao: msgPadrao,
+        shortCode: shortSlug,
+        shortUrl: `r.html?c=${shortSlug}`,
+        criadoEm: criadoEm,
+        leads: []
+      };
+
+      trackingLinksData.unshift(novoLink);
+      saveTrackingStorage();
+      renderTrackingTable();
+      closeModalGerarLink();
+      showToast(`Link para "${nome}" gerado com sucesso!`);
+
+      // Mostra a área de contatos do link recém-criado
+      mostrarContatosLink(newId);
+    }
+
+    function copyShortLink(url) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(() => {
+          showToast('Link curto copiado para a área de transferência! Pronto para colar no anúncio.');
+        }).catch(() => {
+          prompt('Copie o link abaixo:', url);
+        });
+      } else {
+        prompt('Copie o link curto para colar no anúncio:', url);
+      }
+    }
+
+    function excluirTrackingLink(id) {
+      const link = trackingLinksData.find(x => x.id === id);
+      if (!link) return;
+      if (confirm(`Tem certeza que deseja excluir o link de anúncio "${link.nome}"?`)) {
+        trackingLinksData = trackingLinksData.filter(x => x.id !== id);
+        if (linkSelecionadoId === id) {
+          fecharCardContatos();
+        }
+        saveTrackingStorage();
+        renderTrackingTable();
+        showToast(`Link "${link.nome}" excluído!`);
+      }
+    }
+
+    function mostrarContatosLink(linkId) {
+      linkSelecionadoId = linkId;
+      const link = trackingLinksData.find(x => x.id === linkId);
+      if (!link) return;
+
+      const card = document.getElementById('cardContatosDoLink');
+      const lbl = document.getElementById('lblNomeLinkSelecionado');
+      if (lbl) lbl.innerText = link.nome;
+      if (card) card.style.display = 'block';
+
+      renderContatosDoLink(linkId);
+
+      // Scroll suave até a lista de contatos
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function fecharCardContatos() {
+      linkSelecionadoId = null;
+      const card = document.getElementById('cardContatosDoLink');
+      if (card) card.style.display = 'none';
+      renderTrackingTable();
+    }
+
+    function renderContatosDoLink(linkId) {
+      const link = trackingLinksData.find(x => x.id === linkId);
+      const tbody = document.getElementById('tbodyContatosLink');
+      if (!link || !tbody) return;
+
+      const leads = link.leads || [];
+
+      if (leads.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; color: #64748b; padding: 25px;">
+              Nenhum contato registrado neste criativo ainda.<br>
+              <span style="font-size: 12px; color: #94a3b8;">Os números aparecem aqui quando os leads clicam no criativo ou quando você clica em <strong>+ Adicionar Contato</strong>.</span>
+            </td>
+          </tr>
+        `;
+      } else {
+        tbody.innerHTML = leads.map(lead => {
+          const cfg = stageConfig[lead.fase] || stageConfig.conversas;
+          const cleanPhone = lead.numero.replace(/\D/g, '');
+          const waHref = cleanPhone.length >= 10 ? `https://wa.me/${cleanPhone.startsWith('55') ? cleanPhone : '55' + cleanPhone}` : '#';
+
+          return `
+            <tr>
+              <td>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <div style="background: rgba(16, 185, 129, 0.15); color: #34d399; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="phone" style="width: 16px; height: 16px;"></i>
+                  </div>
+                  <div>
+                    <span class="mono-val" style="font-weight: 700; color: #fff; font-size: 13px;">${lead.numero}</span>
+                    ${waHref !== '#' ? `<a href="${waHref}" target="_blank" style="margin-left: 6px; font-size: 11px; color: #34d399; text-decoration: none;" title="Abrir Conversa no WhatsApp"><i data-lucide="external-link" style="width: 11px; height: 11px; vertical-align: middle;"></i> Conversar</a>` : ''}
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span class="mono-val" style="font-size: 12px; color: #cbd5e1;">${lead.data || 'Hoje'}</span>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <select class="stage-select-box" onchange="alterarFaseLead('${link.id}', '${lead.id}', this.value)" style="border-color: ${cfg.border}; color: ${cfg.color};">
+                    <option value="conversas" ${lead.fase === 'conversas' ? 'selected' : ''}>1. Conversas</option>
+                    <option value="diagnostico" ${lead.fase === 'diagnostico' ? 'selected' : ''}>2. Diagnóstico</option>
+                    <option value="oferta_servico" ${lead.fase === 'oferta_servico' ? 'selected' : ''}>3. Oferta de Serviço</option>
+                    <option value="negociacao" ${lead.fase === 'negociacao' ? 'selected' : ''}>4. Negociação</option>
+                    <option value="conversao" ${lead.fase === 'conversao' ? 'selected' : ''}>5. Conversão</option>
+                  </select>
+                </div>
+              </td>
+              <td style="text-align: center;">
+                <!-- BOTÃO SOLICITADO: "PREENCHER CADASTRO" COM O NÚMERO JÁ PREENCHIDO E OUTROS VAZIOS -->
+                <button type="button" class="btn-action btn-primary-action" onclick="preencherCadastroDoLead('${lead.numero}', '${link.nome.replace(/'/g, "\\'")}')" style="font-size: 12px; padding: 6px 14px; box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);">
+                  <i data-lucide="user-check" style="width: 14px; height: 14px;"></i> Preencher Cadastro
+                </button>
+              </td>
+              <td style="text-align: center;">
+                <button type="button" class="btn-icon delete" onclick="excluirLead('${link.id}', '${lead.id}')" title="Excluir Contato" style="width: 26px; height: 26px;">
+                  <i data-lucide="trash-2" style="width: 13px; height: 13px;"></i>
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      lucide.createIcons();
+    }
+
+    function alterarFaseLead(linkId, leadId, novaFase) {
+      const link = trackingLinksData.find(x => x.id === linkId);
+      if (!link) return;
+      const lead = (link.leads || []).find(l => l.id === leadId);
+      if (!lead) return;
+
+      lead.fase = novaFase;
+      saveTrackingStorage();
+      renderTrackingTable();
+      renderContatosDoLink(linkId);
+
+      const faseNome = stageConfig[novaFase]?.label || novaFase;
+      showToast(`Tag do lead alterada para "${faseNome}"! Métricas do link atualizadas.`);
+    }
+
+    // BOTÃO "PREENCHER CADASTRO": Abre formulário de cadastro de cliente com o número preenchido e outros vazios
+    function preencherCadastroDoLead(telefone, linkNome) {
+      openClientModal(null, {
+        telefone: telefone,
+        origem: 'trafego',
+        servicos: 'Lead do Tráfego (' + linkNome + ')',
+        status: 'reuniao'
+      });
+      showToast(`Cadastro aberto para o WhatsApp ${telefone}! Preencha o nome e valores.`);
+    }
+
+    function openAddLeadModal(linkId = null) {
+      const targetId = linkId || linkSelecionadoId;
+      if (!targetId && trackingLinksData.length > 0) {
+        linkSelecionadoId = trackingLinksData[0].id;
+      }
+      document.getElementById('leadLinkId').value = targetId || (trackingLinksData[0] ? trackingLinksData[0].id : '');
+      document.getElementById('leadNumero').value = '';
+      document.getElementById('leadFase').value = 'conversas';
+      document.getElementById('modalAddLead').style.display = 'flex';
+      lucide.createIcons();
+    }
+
+    function closeAddLeadModal() {
+      document.getElementById('modalAddLead').style.display = 'none';
+    }
+
+    function salvarNovoLead(e) {
+      e.preventDefault();
+      const linkId = document.getElementById('leadLinkId').value;
+      const numero = document.getElementById('leadNumero').value.trim();
+      const fase = document.getElementById('leadFase').value;
+
+      const link = trackingLinksData.find(x => x.id === linkId);
+      if (!link) {
+        showToast('Erro: Selecione um link válido!');
+        return;
+      }
+
+      if (!link.leads) link.leads = [];
+
+      const now = new Date();
+      const dataFormatada = now.toLocaleDateString('pt-BR') + ' ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+      link.leads.unshift({
+        id: 'ld_' + Date.now(),
+        numero: numero,
+        data: dataFormatada,
+        fase: fase
+      });
+
+      saveTrackingStorage();
+      closeAddLeadModal();
+      renderTrackingTable();
+      mostrarContatosLink(linkId);
+      showToast(`Contato ${numero} adicionado com sucesso na fase "${stageConfig[fase].label}"!`);
+    }
+
+    function excluirLead(linkId, leadId) {
+      const link = trackingLinksData.find(x => x.id === linkId);
+      if (!link) return;
+      if (confirm('Deseja excluir este contato da lista?')) {
+        link.leads = (link.leads || []).filter(l => l.id !== leadId);
+        saveTrackingStorage();
+        renderTrackingTable();
+        renderContatosDoLink(linkId);
+        showToast('Contato removido!');
+      }
+    }
+
+    // ==========================================
     // SIDEBAR TOGGLE & EXPANSÃO (BOTÃO SANDUÍCHE)
     // ==========================================
     function toggleSidebar() {
@@ -3573,6 +4264,9 @@
       if (tabId === 'tab-servicos') {
         renderServices();
       }
+      if (tabId === 'tab-trackeamento') {
+        renderTrackingTable();
+      }
       lucide.createIcons();
     }
 
@@ -3581,6 +4275,7 @@
       lucide.createIcons();
       initSidebar();
       loadServices();
+      loadTrackingLinks();
       if (sessionStorage.getItem('pr_auth_token')) {
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('mainDashboard').style.display = 'flex';
